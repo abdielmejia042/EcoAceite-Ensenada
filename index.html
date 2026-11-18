@@ -17,13 +17,12 @@
 
   <style>
     body { font-family: 'Plus Jakarta Sans', sans-serif; }
-    #mapa { z-index: 10; }
-    .fade-in { animation: fadeIn 0.3s cubic-bezier(0.16, 1, 0.3, 1); }
+    #mapa, #mapa-espectador { z-index: 10; }
+    .fade-in { animation: fadeIn 0.25s cubic-bezier(0.16, 1, 0.3, 1); }
     @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(8px); }
+      from { opacity: 0; transform: translateY(6px); }
       to { opacity: 1; transform: translateY(0); }
     }
-    /* Scrollbar personalizado */
     ::-webkit-scrollbar { width: 6px; height: 6px; }
     ::-webkit-scrollbar-track { background: #f1f5f9; border-radius: 8px; }
     ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 8px; }
@@ -31,6 +30,119 @@
   </style>
 </head>
 <body class="bg-slate-100 text-slate-800 min-h-screen flex flex-col selection:bg-emerald-500 selection:text-white">
+
+  <!-- =================================================================== -->
+  <!-- MODAL DE BIENVENIDA Y SELECCIÓN DE ROL / PERFIL                     -->
+  <!-- =================================================================== -->
+  <div id="modal-rol" class="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm hidden items-center justify-center p-4">
+    <div class="bg-white rounded-3xl max-w-2xl w-full p-6 sm:p-8 shadow-2xl border border-slate-200 fade-in max-h-[92vh] overflow-y-auto">
+      <div class="flex items-center justify-between pb-4 border-b border-slate-100">
+        <div class="flex items-center gap-3">
+          <div class="w-11 h-11 rounded-2xl bg-emerald-600 text-white flex items-center justify-center text-2xl shadow">
+            ♻️
+          </div>
+          <div>
+            <h2 class="text-xl font-extrabold text-slate-900">Bienvenido a EcoAceite Ensenada</h2>
+            <p class="text-xs text-slate-500">Selecciona cómo deseas interactuar con la plataforma</p>
+          </div>
+        </div>
+        <button onclick="cerrarModalRol()" class="text-slate-400 hover:text-slate-700 text-xl font-bold px-2">✕</button>
+      </div>
+
+      <!-- 3 Tarjetas de Rol -->
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-3.5 my-6">
+        <!-- Rol 1: Espectador -->
+        <button onclick="seleccionarModo('espectador')"
+          class="p-4 rounded-2xl border-2 border-slate-200 hover:border-emerald-500 text-left transition flex flex-col justify-between bg-slate-50/60 hover:bg-emerald-50/40 group">
+          <div>
+            <span class="text-2xl">👀</span>
+            <h3 class="font-extrabold text-slate-800 text-sm mt-2 group-hover:text-emerald-800">Modo Espectador</h3>
+            <p class="text-[11px] text-slate-500 mt-1 leading-relaxed">
+              Explora métricas de agua protegida, el mapa en vivo de Ensenada y la bitácora sin modificar datos.
+            </p>
+          </div>
+          <span class="mt-4 inline-block text-[11px] font-bold text-emerald-700">Entrar como visitante →</span>
+        </button>
+
+        <!-- Rol 2: Negocio / Generador -->
+        <button onclick="mostrarFormularioPerfilNegocio()"
+          class="p-4 rounded-2xl border-2 border-emerald-500 bg-emerald-50/50 hover:bg-emerald-100/50 text-left transition flex flex-col justify-between">
+          <div>
+            <span class="text-2xl">🍳</span>
+            <h3 class="font-extrabold text-emerald-950 text-sm mt-2">Soy Negocio / Hogar</h3>
+            <p class="text-[11px] text-emerald-800/80 mt-1 leading-relaxed">
+              Guarda los datos de tu restaurante o casa para pedir recolecciones en 1 clic y llevar tu historial.
+            </p>
+          </div>
+          <span class="mt-4 inline-block text-[11px] font-extrabold text-emerald-700">Configurar mi negocio →</span>
+        </button>
+
+        <!-- Rol 3: Recolector -->
+        <button onclick="seleccionarModo('recolector')"
+          class="p-4 rounded-2xl border-2 border-slate-200 hover:border-amber-500 text-left transition flex flex-col justify-between bg-slate-50/60 hover:bg-amber-50/40 group">
+          <div>
+            <span class="text-2xl">🚚</span>
+            <h3 class="font-extrabold text-slate-800 text-sm mt-2 group-hover:text-amber-900">Soy Recolector</h3>
+            <p class="text-[11px] text-slate-500 mt-1 leading-relaxed">
+              Accede a la hoja de ruta activa en Ensenada y confirma las recolecciones completadas en campo.
+            </p>
+          </div>
+          <span class="mt-4 inline-block text-[11px] font-bold text-amber-700">Abrir ruta operativa →</span>
+        </button>
+      </div>
+
+      <!-- Sub-formulario para guardar perfil del Negocio -->
+      <form id="form-perfil-negocio" class="hidden bg-slate-50 p-5 rounded-2xl border border-slate-200 space-y-4">
+        <div class="flex items-center justify-between">
+          <h4 class="text-sm font-extrabold text-slate-800">📌 Guardar Perfil de mi Comercio o Casa</h4>
+          <span class="text-[11px] text-emerald-700 font-semibold">Se recordará en este dispositivo</span>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">Nombre del Negocio / Hogar *</label>
+            <input type="text" id="perfil-nombre" required placeholder="Ej. Mariscos El Puerto"
+              class="w-full px-3 py-2 rounded-xl border border-slate-300 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500">
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">Giro</label>
+            <select id="perfil-giro"
+              class="w-full px-3 py-2 rounded-xl border border-slate-300 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500">
+              <option value="Mariscos / Carreta">🦐 Mariscos / Carreta</option>
+              <option value="Restaurante / Cocina">🍽️ Restaurante</option>
+              <option value="Taquería / Snacks">🌮 Taquería / Snacks</option>
+              <option value="Food Truck / Café">🚚 Food Truck</option>
+              <option value="Hogar Particular">🏠 Hogar Particular</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">Zona en Ensenada *</label>
+            <select id="perfil-zona" required
+              class="w-full px-3 py-2 rounded-xl border border-slate-300 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500">
+              <option value="Zona Centro / Costero">Zona Centro / Costero</option>
+              <option value="Playa Hermosa / Reforma">Playa Hermosa / Reforma</option>
+              <option value="El Sauzal">El Sauzal</option>
+              <option value="Chapultepec">Chapultepec</option>
+              <option value="Valle Dorado">Valle Dorado</option>
+              <option value="Macroplaza / Reforma">Macroplaza / Reforma</option>
+              <option value="Punta Banda">Punta Banda</option>
+              <option value="Maneadero">Maneadero</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">Teléfono / Horario habitual</label>
+            <input type="text" id="perfil-notas" placeholder="Ej. 646-123-4567 · 10am a 5pm"
+              class="w-full px-3 py-2 rounded-xl border border-slate-300 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500">
+          </div>
+        </div>
+
+        <button type="submit"
+          class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold py-2.5 rounded-xl text-xs sm:text-sm transition shadow">
+          Guardar Mi Negocio y Continuar →
+        </button>
+      </form>
+    </div>
+  </div>
 
   <!-- Notificación Flotante (Toast) -->
   <div id="toast" class="fixed bottom-5 right-5 z-50 hidden bg-slate-900 text-white px-5 py-4 rounded-2xl shadow-2xl border border-emerald-500/40 flex items-center gap-3.5 transition-all max-w-sm">
@@ -43,16 +155,26 @@
     </div>
   </div>
 
-  <!-- Barra Superior de Estado -->
+  <!-- Barra Superior de Estado y Perfil Activo -->
   <div class="bg-emerald-950 text-emerald-200 text-xs py-2 px-4 border-b border-emerald-800/60">
     <div class="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-2">
-      <div class="flex items-center gap-2">
-        <span class="inline-block w-2 h-2 rounded-full bg-emerald-400"></span>
-        <span>Red de Economía Circular · <strong>Ensenada, Baja California</strong></span>
+      <div class="flex items-center gap-3">
+        <div id="estado-db" class="flex items-center gap-2 bg-emerald-900/70 px-3 py-0.5 rounded-full border border-emerald-700/50">
+          <span id="indicador-pulso" class="w-2 h-2 rounded-full bg-amber-400 animate-pulse"></span>
+          <span id="texto-db" class="font-medium text-[11px]">Conectando...</span>
+        </div>
+        <span class="hidden sm:inline text-emerald-400/80">Ensenada, B.C.</span>
       </div>
-      <div id="estado-db" class="flex items-center gap-2 bg-emerald-900/70 px-3 py-0.5 rounded-full border border-emerald-700/50">
-        <span id="indicador-pulso" class="w-2 h-2 rounded-full bg-amber-400 animate-pulse"></span>
-        <span id="texto-db" class="font-medium text-[11px]">Sincronización Local Activa (Listo para Firebase)</span>
+
+      <!-- Indicador de Perfil / Botón Cambiar Rol -->
+      <div class="flex items-center gap-2">
+        <span id="badge-rol-activo" class="bg-emerald-800/90 text-emerald-100 px-3 py-0.5 rounded-full font-bold text-[11px] border border-emerald-600/50">
+          👀 Modo Espectador
+        </span>
+        <button onclick="abrirModalRol()"
+          class="bg-white/10 hover:bg-white/20 text-white px-2.5 py-0.5 rounded-full text-[11px] font-semibold transition">
+          Cambiar Perfil ⚙️
+        </button>
       </div>
     </div>
   </div>
@@ -60,7 +182,6 @@
   <!-- Header Principal y Navegación -->
   <header class="bg-emerald-900 text-white shadow-lg sticky top-0 z-40 border-b border-emerald-800">
     <div class="max-w-7xl mx-auto px-4 py-3.5 flex flex-col md:flex-row items-center justify-between gap-3.5">
-      <!-- Identidad de Marca -->
       <div class="flex items-center gap-3 cursor-pointer" onclick="cambiarVista('impacto')">
         <div class="w-11 h-11 rounded-2xl bg-gradient-to-br from-emerald-400 to-teal-600 flex items-center justify-center text-2xl shadow-inner border border-white/20">
           ♻️
@@ -70,25 +191,25 @@
             <h1 class="text-xl font-extrabold tracking-tight leading-none">
               EcoAceite <span class="text-emerald-400">Ensenada</span>
             </h1>
-            <span class="bg-emerald-800 text-emerald-300 text-[10px] font-bold px-2 py-0.5 rounded-md border border-emerald-700">MVP v1.0</span>
+            <span class="bg-emerald-800 text-emerald-300 text-[10px] font-bold px-2 py-0.5 rounded-md border border-emerald-700">Tiempo Real</span>
           </div>
-          <p class="text-xs text-emerald-200/80 mt-1">Gestión y Valorización de Aceite Vegetal Usado (AVU)</p>
+          <p class="text-xs text-emerald-200/80 mt-1">Logística Circular de Aceite Vegetal Usado (AVU)</p>
         </div>
       </div>
 
-      <!-- Botonera de Roles / Vistas -->
+      <!-- Botonera de Vistas -->
       <nav class="flex bg-emerald-950/80 p-1.5 rounded-2xl border border-emerald-800/80 w-full md:w-auto">
         <button onclick="cambiarVista('impacto')" id="btn-impacto"
-          class="nav-btn flex-1 md:flex-initial px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all bg-emerald-500 text-slate-950 shadow-md">
-          🌎 Impacto &amp; Reúso
+          class="nav-btn flex-1 md:flex-initial px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all bg-emerald-500 text-slate-950 shadow-md flex items-center justify-center gap-1.5">
+          🌎 Impacto &amp; Mapa
         </button>
         <button onclick="cambiarVista('restaurante')" id="btn-restaurante"
-          class="nav-btn flex-1 md:flex-initial px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all text-emerald-200 hover:text-white">
-          🍳 Soy Generador
+          class="nav-btn flex-1 md:flex-initial px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all text-emerald-200 hover:text-white flex items-center justify-center gap-1.5">
+          🍳 Mi Negocio
         </button>
         <button onclick="cambiarVista('recolector')" id="btn-recolector"
           class="nav-btn flex-1 md:flex-initial px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all text-emerald-200 hover:text-white flex items-center justify-center gap-2">
-          <span>🚚 Mapa Recolector</span>
+          <span>🚚 Ruta Recolector</span>
           <span id="badge-pendientes" class="bg-amber-400 text-slate-950 text-xs font-extrabold px-2 py-0.5 rounded-full shadow">0</span>
         </button>
       </nav>
@@ -99,7 +220,7 @@
   <main class="flex-grow max-w-7xl w-full mx-auto px-4 py-6 sm:py-8">
 
     <!-- =================================================================== -->
-    <!-- VISTA 1: IMPACTO AMBIENTAL, CALCULADORA Y ECONOMÍA CIRCULAR         -->
+    <!-- VISTA 1: ESPECTADOR / IMPACTO AMBIENTAL Y MAPA PÚBLICO EN VIVO      -->
     <!-- =================================================================== -->
     <section id="vista-impacto" class="fade-in space-y-8">
 
@@ -112,19 +233,19 @@
               <span>1 Litro de aceite contamina hasta 1,000 Litros de agua</span>
             </div>
             <h2 class="text-2xl sm:text-4xl font-extrabold leading-tight tracking-tight">
-              Evitemos que el aceite gastronómico de Ensenada llegue al mar
+              Protegiendo la bahía y el drenaje de Ensenada en tiempo real
             </h2>
             <p class="text-emerald-100/90 text-sm sm:text-base leading-relaxed">
-              Plataforma de logística inversa que conecta a restaurantes, carritos de mariscos, taquerías y hogares con recolectores locales para transformar el aceite de cocina usado en <strong>biodiésel, jabones biodegradables y bio-productos</strong>.
+              Conectamos a restaurantes, carretas de mariscos, taquerías y hogares con recolectores autorizados para transformar el aceite usado en <strong>biodiésel, jabones biodegradables y productos limpios</strong>.
             </p>
             <div class="flex flex-wrap gap-3 pt-2">
               <button onclick="cambiarVista('restaurante')"
-                class="bg-emerald-400 hover:bg-emerald-300 text-slate-950 font-extrabold px-6 py-3 rounded-xl text-sm transition shadow-lg">
-                + Registrar Aceite para Recolección
+                class="bg-emerald-400 hover:bg-emerald-300 text-slate-950 font-extrabold px-5 py-3 rounded-xl text-xs sm:text-sm transition shadow-lg">
+                🍳 Registrar Recolección de mi Negocio
               </button>
-              <button onclick="cambiarVista('recolector')"
-                class="bg-white/10 hover:bg-white/20 border border-white/20 text-white font-semibold px-6 py-3 rounded-xl text-sm transition">
-                Explorar Mapa de Ensenada 🗺️
+              <button onclick="abrirModalRol()"
+                class="bg-white/10 hover:bg-white/20 border border-white/20 text-white font-semibold px-5 py-3 rounded-xl text-xs sm:text-sm transition">
+                ⚙️ Configurar Perfil de Usuario
               </button>
             </div>
           </div>
@@ -139,7 +260,7 @@
               <p class="text-3xl font-extrabold text-white">
                 <span id="meta-actual">0</span> <span class="text-base font-medium text-emerald-300">/ 500 Litros de AVU</span>
               </p>
-              <p class="text-xs text-emerald-200/70 mt-1">Equivalente a proteger media alberca olímpica de agua cada mes</p>
+              <p class="text-xs text-emerald-200/70 mt-1">Equivalente a proteger 500,000 L de agua cada mes</p>
             </div>
             <div class="w-full bg-emerald-900 rounded-full h-3.5 overflow-hidden border border-emerald-700">
               <div id="barra-meta" class="bg-gradient-to-r from-emerald-400 to-teal-300 h-full rounded-full transition-all duration-500" style="width: 0%"></div>
@@ -150,7 +271,7 @@
                 <strong id="stat-co2" class="text-white text-sm">0 kg CO₂</strong>
               </div>
               <div>
-                <span class="text-emerald-300/80 block">Puntos Activos Hoy</span>
+                <span class="text-emerald-300/80 block">Puntos Pendientes Hoy</span>
                 <strong id="stat-pendientes-hero" class="text-amber-300 text-sm">0 comercios</strong>
               </div>
             </div>
@@ -161,7 +282,7 @@
       <!-- 4 Indicadores de Impacto en Tiempo Real -->
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5">
         <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200/90 flex items-center gap-4">
-          <div class="w-13 h-13 p-3.5 rounded-2xl bg-amber-100 text-amber-600 flex items-center justify-center text-2xl shrink-0">
+          <div class="p-3.5 rounded-2xl bg-amber-100 text-amber-600 flex items-center justify-center text-2xl shrink-0">
             🛢️
           </div>
           <div>
@@ -173,7 +294,7 @@
         </div>
 
         <div class="bg-white p-5 rounded-2xl shadow-sm border border-sky-200 bg-gradient-to-br from-white to-sky-50/50 flex items-center gap-4">
-          <div class="w-13 h-13 p-3.5 rounded-2xl bg-sky-100 text-sky-600 flex items-center justify-center text-2xl shrink-0">
+          <div class="p-3.5 rounded-2xl bg-sky-100 text-sky-600 flex items-center justify-center text-2xl shrink-0">
             💧
           </div>
           <div>
@@ -185,11 +306,11 @@
         </div>
 
         <div class="bg-white p-5 rounded-2xl shadow-sm border border-emerald-200 bg-gradient-to-br from-white to-emerald-50/50 flex items-center gap-4">
-          <div class="w-13 h-13 p-3.5 rounded-2xl bg-emerald-100 text-emerald-700 flex items-center justify-center text-2xl shrink-0">
+          <div class="p-3.5 rounded-2xl bg-emerald-100 text-emerald-700 flex items-center justify-center text-2xl shrink-0">
             ⛽
           </div>
           <div>
-            <p class="text-[11px] font-bold uppercase tracking-wider text-emerald-700">Biodiésel Potencial</p>
+            <p class="text-[11px] font-bold uppercase tracking-wider text-emerald-700">Biodiésel Generable</p>
             <p class="text-2xl font-extrabold text-emerald-700 mt-0.5">
               <span id="stat-biodiesel">0</span> <span class="text-sm font-semibold text-emerald-600">Litros</span>
             </p>
@@ -197,7 +318,7 @@
         </div>
 
         <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200/90 flex items-center gap-4">
-          <div class="w-13 h-13 p-3.5 rounded-2xl bg-purple-100 text-purple-600 flex items-center justify-center text-2xl shrink-0">
+          <div class="p-3.5 rounded-2xl bg-purple-100 text-purple-600 flex items-center justify-center text-2xl shrink-0">
             ✅
           </div>
           <div>
@@ -209,78 +330,104 @@
         </div>
       </div>
 
+      <!-- MAPA PÚBLICO PARA ESPECTADORES + MONITOR DE ACTIVIDAD -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+        <div class="lg:col-span-7 bg-white p-5 rounded-3xl shadow-sm border border-slate-200/90 flex flex-col">
+          <div class="flex flex-wrap items-center justify-between gap-2 mb-3">
+            <div>
+              <span class="text-[11px] font-bold uppercase tracking-wider text-emerald-600">Vista Espectador en Vivo</span>
+              <h3 class="text-lg font-extrabold text-slate-800">🗺️ Mapa Comunitario de Ensenada</h3>
+            </div>
+            <button onclick="centrarMapaEspectador()"
+              class="text-xs bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold px-3 py-1.5 rounded-xl transition">
+              🎯 Centrar Mapa
+            </button>
+          </div>
+          <div id="mapa-espectador" class="w-full h-[360px] rounded-2xl border border-slate-200"></div>
+          <div class="flex flex-wrap items-center gap-4 mt-3 text-xs text-slate-500">
+            <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-full bg-amber-500 inline-block"></span> Recolección pendiente</span>
+            <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-full bg-emerald-600 inline-block"></span> Centro de acopio fijo</span>
+          </div>
+        </div>
+
+        <!-- Actividad Reciente (Modo Espectador Solo Lectura) -->
+        <div class="lg:col-span-5 bg-white p-5 sm:p-6 rounded-3xl shadow-sm border border-slate-200/90 flex flex-col">
+          <div class="mb-3 pb-3 border-b border-slate-100 flex items-center justify-between">
+            <div>
+              <span class="text-[11px] font-bold uppercase tracking-wider text-emerald-600">Transparencia Comunitaria</span>
+              <h3 class="text-lg font-extrabold text-slate-800">Últimos Movimientos</h3>
+            </div>
+            <span class="text-[11px] bg-slate-100 text-slate-600 font-bold px-2.5 py-1 rounded-full">Solo lectura</span>
+          </div>
+          <div id="feed-espectador" class="space-y-2.5 max-h-[340px] overflow-y-auto pr-1 flex-grow">
+            <!-- Dinámico -->
+          </div>
+        </div>
+      </div>
+
       <!-- Fila Doble: ¿En qué se transforma? + Simulador de Impacto -->
       <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
-        <!-- Productos de Economía Circular -->
         <div class="lg:col-span-7 bg-white p-6 sm:p-7 rounded-3xl shadow-sm border border-slate-200/90 space-y-5">
           <div>
-            <span class="text-xs font-bold uppercase tracking-wider text-emerald-600">Valorización del Residuo</span>
-            <h3 class="text-xl font-extrabold text-slate-800 mt-0.5">¿Qué se hace con el aceite recolectado?</h3>
-            <p class="text-xs sm:text-sm text-slate-500 mt-1">Una vez filtrado de residuos sólidos y deshidratado, el aceite usado se transforma en:</p>
+            <span class="text-xs font-bold uppercase tracking-wider text-emerald-600">Economía Circular</span>
+            <h3 class="text-xl font-extrabold text-slate-800 mt-0.5">¿En qué se transforma el aceite recolectado?</h3>
           </div>
 
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200/70 hover:border-emerald-400 transition">
+            <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200/70">
               <div class="flex items-center justify-between mb-2">
                 <span class="text-2xl">⛽</span>
                 <span class="text-[11px] font-bold bg-emerald-100 text-emerald-800 px-2.5 py-0.5 rounded-full">Rendimiento: 88%</span>
               </div>
-              <h4 class="font-bold text-slate-800 text-sm">Biodiésel (Transesterificación)</h4>
-              <p class="text-xs text-slate-600 mt-1 leading-relaxed">Biocombustible renovable que reduce hasta un 80% las emisiones de gases de efecto invernadero frente al diésel fósil.</p>
+              <h4 class="font-bold text-slate-800 text-sm">Biodiésel</h4>
+              <p class="text-xs text-slate-600 mt-1 leading-relaxed">Biocombustible renovable que reduce hasta un 80% las emisiones contaminantes frente al diésel fósil.</p>
             </div>
 
-            <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200/70 hover:border-emerald-400 transition">
+            <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200/70">
               <div class="flex items-center justify-between mb-2">
                 <span class="text-2xl">🧼</span>
                 <span class="text-[11px] font-bold bg-sky-100 text-sky-800 px-2.5 py-0.5 rounded-full">Saponificación</span>
               </div>
-              <h4 class="font-bold text-slate-800 text-sm">Jabones y Detergentes</h4>
-              <p class="text-xs text-slate-600 mt-1 leading-relaxed">Combinado con sosa cáustica produce jabones biodegradables en barra y desengrasantes ecológicos para cocinas.</p>
+              <h4 class="font-bold text-slate-800 text-sm">Jabones Biodegradables</h4>
+              <p class="text-xs text-slate-600 mt-1 leading-relaxed">Elaboración de jabones en barra y desengrasantes ecológicos para cocinas y comercios locales.</p>
             </div>
 
-            <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200/70 hover:border-emerald-400 transition">
+            <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200/70">
               <div class="flex items-center justify-between mb-2">
                 <span class="text-2xl">🧴</span>
                 <span class="text-[11px] font-bold bg-purple-100 text-purple-800 px-2.5 py-0.5 rounded-full">Subproducto</span>
               </div>
               <h4 class="font-bold text-slate-800 text-sm">Glicerina Vegetal</h4>
-              <p class="text-xs text-slate-600 mt-1 leading-relaxed">Subproducto purificado de alto valor para la industria cosmética, farmacéutica y fabricación de cremas humectantes.</p>
+              <p class="text-xs text-slate-600 mt-1 leading-relaxed">Base purificada aprovechada en la industria cosmética, farmacéutica y cremas humectantes.</p>
             </div>
 
-            <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200/70 hover:border-emerald-400 transition">
+            <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200/70">
               <div class="flex items-center justify-between mb-2">
                 <span class="text-2xl">🕯️</span>
                 <span class="text-[11px] font-bold bg-amber-100 text-amber-800 px-2.5 py-0.5 rounded-full">Artesanal / Industrial</span>
               </div>
-              <h4 class="font-bold text-slate-800 text-sm">Velas Ecológicas y Lubricantes</h4>
-              <p class="text-xs text-slate-600 mt-1 leading-relaxed">Base para velas aromáticas de combustión limpia, ceras impermeabilizantes y desmoldantes para construcción.</p>
+              <h4 class="font-bold text-slate-800 text-sm">Velas y Bio-lubricantes</h4>
+              <p class="text-xs text-slate-600 mt-1 leading-relaxed">Ceras ecológicas de combustión limpia y lubricantes biodegradables para maquinaria.</p>
             </div>
           </div>
         </div>
 
-        <!-- Calculadora Interactiva de Impacto Individual -->
+        <!-- Calculadora Interactiva -->
         <div class="lg:col-span-5 bg-gradient-to-b from-slate-900 to-slate-800 text-white p-6 sm:p-7 rounded-3xl shadow-lg border border-slate-700 flex flex-col justify-between space-y-5">
           <div class="space-y-2">
-            <span class="text-xs font-bold uppercase tracking-wider text-emerald-400">Simulador Rápido</span>
-            <h3 class="text-xl font-extrabold">Calcula la huella de tu cocina o restaurante</h3>
-            <p class="text-xs text-slate-300 leading-relaxed">
-              Ingresa cuántos litros de aceite usado generas a la semana para conocer tu impacto ambiental anual en Ensenada:
-            </p>
+            <span class="text-xs font-bold uppercase tracking-wider text-emerald-400">Simulador Ambiental</span>
+            <h3 class="text-xl font-extrabold">Calcula la huella anual de tu cocina</h3>
+            <p class="text-xs text-slate-300">Desliza para estimar el impacto anual según los litros usados por semana:</p>
           </div>
 
           <div class="space-y-4 bg-slate-800/90 p-4 rounded-2xl border border-slate-700">
             <div>
               <div class="flex justify-between text-xs font-semibold mb-1.5">
-                <span class="text-slate-300">Litros de aceite por semana:</span>
+                <span class="text-slate-300">Litros por semana:</span>
                 <span id="calc-valor-semana" class="text-emerald-400 font-bold text-sm">15 L / semana</span>
               </div>
               <input type="range" id="calc-input-litros" min="1" max="150" value="15" oninput="actualizarCalculadora()"
                 class="w-full accent-emerald-400 cursor-pointer h-2 bg-slate-700 rounded-lg">
-              <div class="flex justify-between text-[10px] text-slate-400 mt-1">
-                <span>1 L (Hogar)</span>
-                <span>50 L (Restaurante)</span>
-                <span>150 L (Industrial)</span>
-              </div>
             </div>
 
             <div class="grid grid-cols-2 gap-3 pt-2">
@@ -293,7 +440,7 @@
                 <strong id="calc-anual-agua" class="text-lg font-extrabold text-sky-400">780,000 L</strong>
               </div>
               <div class="bg-slate-900/90 p-3 rounded-xl border border-slate-700/80">
-                <span class="text-[11px] text-slate-400 block">Biodiésel generable</span>
+                <span class="text-[11px] text-slate-400 block">Biodiésel anual</span>
                 <strong id="calc-anual-bio" class="text-lg font-extrabold text-emerald-400">686 L</strong>
               </div>
               <div class="bg-slate-900/90 p-3 rounded-xl border border-slate-700/80">
@@ -305,168 +452,166 @@
 
           <button onclick="cambiarVista('restaurante')"
             class="w-full bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-extrabold py-3 rounded-xl text-xs sm:text-sm transition shadow">
-            Agendar Recolección de estos Litros →
+            Agendar Recolección de mi Negocio →
           </button>
-        </div>
-      </div>
-
-      <!-- Directorio de Puntos Fijos de Acopio para Hogares -->
-      <div class="bg-white p-6 sm:p-7 rounded-3xl shadow-sm border border-slate-200/90">
-        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-5">
-          <div>
-            <span class="text-xs font-bold uppercase tracking-wider text-emerald-600">Participación Ciudadana</span>
-            <h3 class="text-lg sm:text-xl font-extrabold text-slate-800">Contenedores Fijos de Acopio en Ensenada (Hogares &lt; 10 L)</h3>
-          </div>
-          <span class="text-xs bg-emerald-50 text-emerald-800 border border-emerald-200 px-3 py-1.5 rounded-xl font-medium">
-            💡 Lleva tu aceite frío y colado en botellas PET bien cerradas
-          </span>
-        </div>
-
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs">
-          <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200/80 flex items-start gap-3">
-            <span class="text-xl bg-emerald-100 text-emerald-700 p-2.5 rounded-xl">📍</span>
-            <div>
-              <h4 class="font-bold text-slate-800 text-sm">Módulo Verde Valle Dorado</h4>
-              <p class="text-slate-500 mt-0.5">Blvd. Zertuche y Av. de los Lagos (Zona Institucional)</p>
-              <p class="text-emerald-700 font-semibold mt-1.5">Lun a Vie: 8:00 AM – 4:00 PM</p>
-            </div>
-          </div>
-
-          <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200/80 flex items-start gap-3">
-            <span class="text-xl bg-emerald-100 text-emerald-700 p-2.5 rounded-xl">📍</span>
-            <div>
-              <h4 class="font-bold text-slate-800 text-sm">Centro de Acopio Zona Centro</h4>
-              <p class="text-slate-500 mt-0.5">Calle Cuarta y Alvarado, Zona Centro</p>
-              <p class="text-emerald-700 font-semibold mt-1.5">Lun a Sáb: 9:00 AM – 5:00 PM</p>
-            </div>
-          </div>
-
-          <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200/80 flex items-start gap-3">
-            <span class="text-xl bg-emerald-100 text-emerald-700 p-2.5 rounded-xl">📍</span>
-            <div>
-              <h4 class="font-bold text-slate-800 text-sm">Punto Universitario El Sauzal</h4>
-              <p class="text-slate-500 mt-0.5">Corredor Costero Tijuana-Ensenada, El Sauzal</p>
-              <p class="text-emerald-700 font-semibold mt-1.5">Lun a Vie: 8:30 AM – 3:30 PM</p>
-            </div>
-          </div>
         </div>
       </div>
     </section>
 
     <!-- =================================================================== -->
-    <!-- VISTA 2: GENERADOR / RESTAURANTE (FORMULARIO Y BITÁCORA)            -->
+    <!-- VISTA 2: MI NEGOCIO / GENERADOR (CON PERFIL GUARDADO)               -->
     <!-- =================================================================== -->
-    <section id="vista-restaurante" class="hidden fade-in grid grid-cols-1 lg:grid-cols-12 gap-6">
+    <section id="vista-restaurante" class="hidden fade-in space-y-6">
 
-      <!-- Columna Izquierda: Formulario de Solicitud -->
-      <div class="lg:col-span-5 bg-white p-6 sm:p-7 rounded-3xl shadow-sm border border-slate-200/90 h-fit">
-        <div class="flex items-center gap-3 mb-5 pb-4 border-b border-slate-100">
-          <div class="w-11 h-11 rounded-2xl bg-emerald-100 text-emerald-700 flex items-center justify-center text-2xl">
-            🍳
+      <!-- Tarjeta de Perfil Guardado del Negocio -->
+      <div class="bg-gradient-to-r from-emerald-900 to-teal-900 text-white p-5 sm:p-6 rounded-3xl shadow-md flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div class="flex items-center gap-3.5">
+          <div class="w-12 h-12 rounded-2xl bg-white/10 border border-white/20 flex items-center justify-center text-2xl shrink-0">
+            🏪
           </div>
           <div>
-            <h2 class="text-lg font-extrabold text-slate-800">Solicitar Recolección de Aceite</h2>
-            <p class="text-xs text-slate-500">El punto aparecerá al instante en el mapa de recolectores</p>
+            <span class="text-[11px] font-bold uppercase tracking-wider text-emerald-300">Perfil de Generador Activo</span>
+            <h3 id="banner-nombre-negocio" class="text-lg sm:text-xl font-extrabold">Sin perfil guardado (Modo Libre)</h3>
+            <p id="banner-detalle-negocio" class="text-xs text-emerald-100/80">Configura tu negocio para autocompletar tus datos y filtrar tus entregas.</p>
           </div>
         </div>
+        <div class="flex items-center gap-2 shrink-0">
+          <button onclick="abrirModalConFormularioNegocio()"
+            class="bg-emerald-400 hover:bg-emerald-300 text-slate-950 font-extrabold px-4 py-2.5 rounded-xl text-xs transition shadow">
+            ✏️ Editar / Guardar Mi Negocio
+          </button>
+        </div>
+      </div>
 
-        <form id="form-solicitud" class="space-y-4">
-          <div>
-            <label class="block text-xs font-bold text-slate-700 mb-1">Nombre del Restaurante / Negocio / Hogar *</label>
-            <input type="text" id="input-negocio" required placeholder="Ej. Mariscos La Guerrerense / Taquería El Trailero"
-              class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500">
-          </div>
-
-          <div class="grid grid-cols-2 gap-3">
-            <div>
-              <label class="block text-xs font-bold text-slate-700 mb-1">Giro del Generador</label>
-              <select id="input-giro"
-                class="w-full px-3 py-2.5 rounded-xl border border-slate-300 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500">
-                <option value="Mariscos / Carreta">🦐 Mariscos / Carreta</option>
-                <option value="Restaurante / Cocina">🍽️ Restaurante</option>
-                <option value="Taquería / Snacks">🌮 Taquería / Snacks</option>
-                <option value="Food Truck / Café">🚚 Food Truck</option>
-                <option value="Hogar Particular">🏠 Hogar Particular</option>
-              </select>
-            </div>
-
-            <div>
-              <label class="block text-xs font-bold text-slate-700 mb-1">Zona en Ensenada *</label>
-              <select id="input-zona" required
-                class="w-full px-3 py-2.5 rounded-xl border border-slate-300 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500">
-                <option value="Zona Centro / Costero">Zona Centro / Costero</option>
-                <option value="Playa Hermosa / Reforma">Playa Hermosa / Reforma</option>
-                <option value="El Sauzal">El Sauzal</option>
-                <option value="Chapultepec">Chapultepec</option>
-                <option value="Valle Dorado">Valle Dorado</option>
-                <option value="Macroplaza / Reforma">Macroplaza / Reforma</option>
-                <option value="Punta Banda">Punta Banda</option>
-                <option value="Maneadero">Maneadero</option>
-              </select>
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+        <!-- Columna Izquierda: Formulario de Solicitud -->
+        <div class="lg:col-span-5 bg-white p-6 sm:p-7 rounded-3xl shadow-sm border border-slate-200/90 h-fit">
+          <div class="flex items-center justify-between mb-5 pb-4 border-b border-slate-100">
+            <div class="flex items-center gap-3">
+              <div class="w-10 h-10 rounded-2xl bg-emerald-100 text-emerald-700 flex items-center justify-center text-xl">
+                🛢️
+              </div>
+              <div>
+                <h2 class="text-base font-extrabold text-slate-800">Nueva Solicitud de Recolección</h2>
+                <p class="text-xs text-slate-500">Se sincroniza al instante en el mapa</p>
+              </div>
             </div>
           </div>
 
-          <div class="grid grid-cols-2 gap-3">
+          <form id="form-solicitud" class="space-y-4">
             <div>
-              <label class="block text-xs font-bold text-slate-700 mb-1">Litros a Entregar *</label>
-              <input type="number" id="input-litros" min="1" max="2000" required placeholder="Ej. 25" oninput="actualizarPreviewImpacto()"
+              <label class="block text-xs font-bold text-slate-700 mb-1">Nombre del Restaurante / Negocio / Hogar *</label>
+              <input type="text" id="input-negocio" required placeholder="Ej. Mariscos La Guerrerense"
                 class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500">
             </div>
 
+            <div class="grid grid-cols-2 gap-3">
+              <div>
+                <label class="block text-xs font-bold text-slate-700 mb-1">Giro del Generador</label>
+                <select id="input-giro"
+                  class="w-full px-3 py-2.5 rounded-xl border border-slate-300 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500">
+                  <option value="Mariscos / Carreta">🦐 Mariscos / Carreta</option>
+                  <option value="Restaurante / Cocina">🍽️ Restaurante</option>
+                  <option value="Taquería / Snacks">🌮 Taquería / Snacks</option>
+                  <option value="Food Truck / Café">🚚 Food Truck</option>
+                  <option value="Hogar Particular">🏠 Hogar Particular</option>
+                </select>
+              </div>
+
+              <div>
+                <label class="block text-xs font-bold text-slate-700 mb-1">Zona en Ensenada *</label>
+                <select id="input-zona" required
+                  class="w-full px-3 py-2.5 rounded-xl border border-slate-300 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500">
+                  <option value="Zona Centro / Costero">Zona Centro / Costero</option>
+                  <option value="Playa Hermosa / Reforma">Playa Hermosa / Reforma</option>
+                  <option value="El Sauzal">El Sauzal</option>
+                  <option value="Chapultepec">Chapultepec</option>
+                  <option value="Valle Dorado">Valle Dorado</option>
+                  <option value="Macroplaza / Reforma">Macroplaza / Reforma</option>
+                  <option value="Punta Banda">Punta Banda</option>
+                  <option value="Maneadero">Maneadero</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-3">
+              <div>
+                <label class="block text-xs font-bold text-slate-700 mb-1">Litros a Entregar *</label>
+                <input type="number" id="input-litros" min="1" max="2000" required placeholder="Ej. 25" oninput="actualizarPreviewImpacto()"
+                  class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500">
+              </div>
+
+              <div>
+                <label class="block text-xs font-bold text-slate-700 mb-1">Tipo de Envase</label>
+                <select id="input-contenedor"
+                  class="w-full px-3 py-2.5 rounded-xl border border-slate-300 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500">
+                  <option value="Garrafón 20L">Garrafón 20L</option>
+                  <option value="Bidón 50L">Bidón 50L</option>
+                  <option value="Tambo 200L">Tambo 200L</option>
+                  <option value="Botellas PET cerradas">Botellas PET cerradas</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="bg-sky-50 border border-sky-200 rounded-xl p-3 flex items-center gap-2.5 text-xs text-sky-900">
+              <span class="text-lg">💧</span>
+              <span>Con esta entrega protegerás <strong id="preview-agua-litros">0 litros</strong> de agua limpia en Ensenada.</span>
+            </div>
+
             <div>
-              <label class="block text-xs font-bold text-slate-700 mb-1">Tipo de Envase</label>
-              <select id="input-contenedor"
-                class="w-full px-3 py-2.5 rounded-xl border border-slate-300 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500">
-                <option value="Garrafón 20L">Garrafón 20L</option>
-                <option value="Bidón 50L">Bidón 50L</option>
-                <option value="Tambo 200L">Tambo 200L</option>
-                <option value="Botellas PET cerradas">Botellas PET cerradas</option>
-              </select>
+              <label class="block text-xs font-bold text-slate-700 mb-1">Teléfono o Horario de Atención (Opcional)</label>
+              <input type="text" id="input-notas" placeholder="Ej. 646-123-4567 · Recoger de 10am a 5pm"
+                class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500">
+            </div>
+
+            <label class="flex items-center gap-2 text-xs text-slate-600 cursor-pointer pt-1">
+              <input type="checkbox" id="check-guardar-perfil" checked class="accent-emerald-600 rounded">
+              <span>Recordar estos datos como mi negocio predeterminado</span>
+            </label>
+
+            <button type="submit"
+              class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold py-3.5 rounded-xl text-sm transition shadow-lg">
+              Publicar Solicitud en Tiempo Real 🚀
+            </button>
+          </form>
+        </div>
+
+        <!-- Columna Derecha: Bitácora con Pestaña "Mis Solicitudes" vs "Todas" -->
+        <div class="lg:col-span-7 bg-white p-6 sm:p-7 rounded-3xl shadow-sm border border-slate-200/90 flex flex-col">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4 pb-4 border-b border-slate-100">
+            <div>
+              <h3 class="text-lg font-extrabold text-slate-800">Bitácora de Solicitudes</h3>
+              <p class="text-xs text-slate-500">Seguimiento en vivo de recolecciones registradas</p>
+            </div>
+
+            <!-- Selector Mis Solicitudes / Global -->
+            <div class="flex bg-slate-100 p-1 rounded-xl border border-slate-200 text-xs font-bold">
+              <button onclick="cambiarFiltroPropias('todas')" id="tab-bitacora-todas"
+                class="px-3 py-1.5 rounded-lg bg-white text-slate-800 shadow-sm transition">
+                🌎 Todas
+              </button>
+              <button onclick="cambiarFiltroPropias('mias')" id="tab-bitacora-mias"
+                class="px-3 py-1.5 rounded-lg text-slate-600 hover:text-slate-900 transition">
+                🏪 Mis Solicitudes
+              </button>
             </div>
           </div>
 
-          <!-- Etiqueta Dinámica de Impacto Previo -->
-          <div id="preview-impacto-box" class="bg-sky-50 border border-sky-200 rounded-xl p-3 flex items-center gap-2.5 text-xs text-sky-900">
-            <span class="text-lg">💧</span>
-            <span>Con esta entrega protegerás <strong id="preview-agua-litros">0 litros</strong> de agua limpia en Ensenada.</span>
-          </div>
-
-          <div>
-            <label class="block text-xs font-bold text-slate-700 mb-1">Teléfono o Horario de Atención (Opcional)</label>
-            <input type="text" id="input-notas" placeholder="Ej. 646-123-4567 · Recoger por callejón de 10am a 5pm"
-              class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500">
-          </div>
-
-          <button type="submit"
-            class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold py-3.5 rounded-xl text-sm transition shadow-lg">
-            Publicar Solicitud en Tiempo Real 🚀
-          </button>
-        </form>
-      </div>
-
-      <!-- Columna Derecha: Bitácora con Buscador y Filtro -->
-      <div class="lg:col-span-7 bg-white p-6 sm:p-7 rounded-3xl shadow-sm border border-slate-200/90 flex flex-col">
-        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-5 pb-4 border-b border-slate-100">
-          <div>
-            <h3 class="text-lg font-extrabold text-slate-800">Bitácora Global de Solicitudes</h3>
-            <p class="text-xs text-slate-500">Historial en vivo de comercios registrados en Ensenada</p>
-          </div>
-
-          <!-- Controles de Filtro -->
-          <div class="flex items-center gap-2">
-            <input type="text" id="buscar-bitacora" oninput="renderizarTodo()" placeholder="Buscar comercio o zona..."
-              class="px-3 py-1.5 rounded-xl border border-slate-300 text-xs focus:outline-none focus:ring-2 focus:ring-emerald-500 w-44">
+          <!-- Buscador y Filtro de Estado -->
+          <div class="flex flex-wrap items-center gap-2 mb-4">
+            <input type="text" id="buscar-bitacora" oninput="renderizarTodo()" placeholder="Buscar negocio o zona..."
+              class="flex-grow px-3.5 py-2 rounded-xl border border-slate-300 text-xs focus:outline-none focus:ring-2 focus:ring-emerald-500">
             <select id="filtro-estado-bitacora" onchange="renderizarTodo()"
-              class="px-2.5 py-1.5 rounded-xl border border-slate-300 text-xs bg-white font-semibold text-slate-700">
-              <option value="todos">Todos</option>
+              class="px-3 py-2 rounded-xl border border-slate-300 text-xs bg-white font-semibold text-slate-700">
+              <option value="todos">Todos los estados</option>
               <option value="pendiente">⏳ Pendientes</option>
               <option value="completado">✅ Recolectados</option>
             </select>
           </div>
-        </div>
 
-        <div id="lista-historial" class="space-y-3 max-h-[490px] overflow-y-auto pr-1">
-          <!-- Renderizado dinámico por JS -->
+          <div id="lista-historial" class="space-y-3 max-h-[450px] overflow-y-auto pr-1">
+            <!-- Renderizado dinámico por JS -->
+          </div>
         </div>
       </div>
     </section>
@@ -490,7 +635,7 @@
           </div>
         </div>
 
-        <div class="flex flex-wrap items-center gap-2.5">
+        <div class="flex flex-wrap items-center gap-2">
           <select id="filtro-zona-mapa" onchange="renderizarTodo()"
             class="px-3 py-2 rounded-xl border border-slate-300 text-xs font-semibold bg-slate-50 text-slate-700">
             <option value="todas">📍 Todas las zonas de Ensenada</option>
@@ -505,22 +650,29 @@
           </select>
 
           <button onclick="centrarMapaEnsenada()"
-            class="text-xs bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold px-3.5 py-2 rounded-xl transition">
-            🎯 Centrar Ensenada
+            class="text-xs bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold px-3 py-2 rounded-xl transition">
+            🎯 Centrar
           </button>
 
-          <button onclick="restaurarDatosDemo()"
-            class="text-xs bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-200 font-bold px-3.5 py-2 rounded-xl transition">
-            🔄 Cargar Datos Demo
+          <button onclick="agregarDatosDemoSeguros()"
+            class="text-xs bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-200 font-bold px-3 py-2 rounded-xl transition"
+            title="Agrega ejemplos sin borrar los registros reales">
+            ➕ Agregar Ejemplos Demo
+          </button>
+
+          <button onclick="limpiarSoloDemos()"
+            class="text-xs bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-200 font-bold px-3 py-2 rounded-xl transition"
+            title="Quita únicamente los ejemplos de prueba y conserva tus registros reales">
+            🧹 Quitar Demos
           </button>
         </div>
       </div>
 
       <!-- Contenedor Mapa + Hoja de Ruta -->
       <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
-        <!-- Mapa Leaflet -->
+        <!-- Mapa Leaflet Operativo -->
         <div class="lg:col-span-7 bg-white p-4 rounded-3xl shadow-sm border border-slate-200/90 flex flex-col">
-          <div id="mapa" class="w-full h-[400px] sm:h-[460px] rounded-2xl border border-slate-200"></div>
+          <div id="mapa" class="w-full h-[420px] sm:h-[470px] rounded-2xl border border-slate-200"></div>
           <div class="flex flex-wrap items-center justify-between gap-2 mt-3 px-2 text-xs text-slate-500">
             <div class="flex items-center gap-4">
               <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-full bg-amber-500 inline-block"></span> Comercio con aceite pendiente</span>
@@ -534,10 +686,10 @@
         <div class="lg:col-span-5 bg-white p-6 rounded-3xl shadow-sm border border-slate-200/90 flex flex-col">
           <div class="mb-4 pb-3 border-b border-slate-100">
             <h3 class="text-lg font-extrabold text-slate-800">🚚 Hoja de Ruta Activa</h3>
-            <p class="text-xs text-slate-500">Confirma las entregas recolectadas para actualizar las métricas ambientales</p>
+            <p class="text-xs text-slate-500">Confirma las entregas recolectadas para sumar litros al impacto global</p>
           </div>
 
-          <div id="lista-recolector" class="space-y-3 max-h-[420px] overflow-y-auto pr-1 flex-grow">
+          <div id="lista-recolector" class="space-y-3 max-h-[430px] overflow-y-auto pr-1 flex-grow">
             <!-- Se llena dinámicamente con JS -->
           </div>
         </div>
@@ -555,17 +707,15 @@
   </footer>
 
   <!-- =================================================================== -->
-  <!-- PARTE 2: LÓGICA JAVASCRIPT, MAPA LEAFLET Y CONEXIÓN HÍBRIDA FIREBASE -->
+  <!-- LÓGICA JAVASCRIPT, MAPAS LEAFLET Y CONEXIÓN FIREBASE EN TIEMPO REAL  -->
   <!-- =================================================================== -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-    import { getDatabase, ref, push, onValue, update, set } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+    import { getDatabase, ref, push, onValue, update, set, remove } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
 
     // =====================================================================
-    // 1. CONFIGURACIÓN DE FIREBASE (OPCIONAL - MODO HÍBRIDO INTELIGENTE)
+    // 1. CREDENCIALES DE FIREBASE (INTEGRADAS)
     // =====================================================================
-    // Si pegas tus datos reales de Firebase aquí, se conectará a la nube en tiempo real.
-    // Si lo dejas así como está, funcionará automáticamente con memoria local (localStorage).
     const firebaseConfig = {
       apiKey: "AIzaSyB1eMGlKe2mvmAMmEJ6rORphrDlQ2bD1ys",
       authDomain: "ecoaceite-ensenada.firebaseapp.com",
@@ -577,7 +727,7 @@
       measurementId: "G-RBB3LQVJFZ"
     };
 
-    const usarFirebase = firebaseConfig.apiKey !== "PEGA_AQUI_TU_API_KEY" && firebaseConfig.apiKey.trim() !== "";
+    const usarFirebase = Boolean(firebaseConfig.apiKey && firebaseConfig.databaseURL);
     let db = null;
     let solicitudesRef = null;
 
@@ -593,7 +743,7 @@
       "Maneadero": [31.7180, -116.5690]
     };
 
-    // Centros de acopio fijos en Ensenada (Siempre visibles en verde en el mapa)
+    // Centros de acopio fijos en Ensenada
     const CENTROS_ACOPIO_FIJOS = [
       {
         nombre: "Módulo Verde Valle Dorado",
@@ -618,11 +768,12 @@
       }
     ];
 
-    // Datos iniciales realistas de demostración para Ensenada
+    // Ejemplos marcados con esDemo: true para nunca confundirlos con registros reales
     const DATOS_DEMO_INICIALES = [
       {
-        id: "demo-1",
-        negocio: "Mariscos Bahía de Todos Santos",
+        keyDemo: "demo_bahia",
+        esDemo: true,
+        negocio: "Mariscos Bahía de Todos Santos (Demo)",
         giro: "Mariscos / Carreta",
         zona: "Zona Centro / Costero",
         litros: 40,
@@ -631,11 +782,13 @@
         lat: 31.8628,
         lng: -116.6248,
         estado: "pendiente",
-        fecha: "Hoy, 10:15 AM"
+        fecha: "Demo · 10:15 AM",
+        timestamp: 1001
       },
       {
-        id: "demo-2",
-        negocio: "Tacos de Pescado El Fénix",
+        keyDemo: "demo_fenix",
+        esDemo: true,
+        negocio: "Tacos de Pescado El Fénix (Demo)",
         giro: "Taquería / Snacks",
         zona: "Playa Hermosa / Reforma",
         litros: 25,
@@ -644,11 +797,13 @@
         lat: 31.8442,
         lng: -116.6110,
         estado: "pendiente",
-        fecha: "Hoy, 11:30 AM"
+        fecha: "Demo · 11:30 AM",
+        timestamp: 1002
       },
       {
-        id: "demo-3",
-        negocio: "Gastro Pub & Cocina El Sauzal",
+        keyDemo: "demo_sauzal",
+        esDemo: true,
+        negocio: "Gastro Pub & Cocina El Sauzal (Demo)",
         giro: "Restaurante / Cocina",
         zona: "El Sauzal",
         litros: 60,
@@ -657,11 +812,13 @@
         lat: 31.8955,
         lng: -116.6942,
         estado: "pendiente",
-        fecha: "Hoy, 12:05 PM"
+        fecha: "Demo · 12:05 PM",
+        timestamp: 1003
       },
       {
-        id: "demo-4",
-        negocio: "Restaurante Muelle Viejo",
+        keyDemo: "demo_muelle",
+        esDemo: true,
+        negocio: "Restaurante Muelle Viejo (Demo)",
         giro: "Restaurante / Cocina",
         zona: "Zona Centro / Costero",
         litros: 85,
@@ -670,75 +827,197 @@
         lat: 31.8605,
         lng: -116.6270,
         estado: "completado",
-        fecha: "Ayer, 04:20 PM"
-      },
-      {
-        id: "demo-5",
-        negocio: "Asadero & Cocina Valle Dorado",
-        giro: "Restaurante / Cocina",
-        zona: "Valle Dorado",
-        litros: 50,
-        contenedor: "Bidón 50L",
-        notas: "Entregado en ruta matutina",
-        lat: 31.8375,
-        lng: -116.5902,
-        estado: "completado",
-        fecha: "Ayer, 01:10 PM"
+        fecha: "Demo · Recolectado",
+        timestamp: 1000
       }
     ];
 
-    // Estado global en memoria
+    // Estado global
     let solicitudes = [];
     let mapa = null;
     let capaMarcadores = null;
+    let mapaEspectador = null;
+    let capaMarcadoresEspectador = null;
+    let filtroBitacoraPropias = "todas";
+    let perfilNegocio = JSON.parse(localStorage.getItem("ecoaceite_perfil_negocio") || "null");
+    let rolActual = localStorage.getItem("ecoaceite_rol_activo") || "espectador";
 
     // =====================================================================
-    // 2. INICIALIZACIÓN DE MAPA LEAFLET (ENSENADA, B.C.)
+    // 2. GESTIÓN DE PERFIL DE USUARIO Y ROLES (ESPECTADOR / NEGOCIO / RECOLECTOR)
     // =====================================================================
-    function inicializarMapa() {
-      if (mapa) return;
+    function actualizarUIconPerfil() {
+      const badgeRol = document.getElementById("badge-rol-activo");
+      const bannerNombre = document.getElementById("banner-nombre-negocio");
+      const bannerDetalle = document.getElementById("banner-detalle-negocio");
 
-      mapa = L.map("mapa").setView([31.8550, -116.6200], 12);
+      if (rolActual === "negocio" && perfilNegocio) {
+        badgeRol.textContent = `🏪 Negocio: ${perfilNegocio.nombre}`;
+      } else if (rolActual === "recolector") {
+        badgeRol.textContent = `🚚 Modo Recolector Activo`;
+      } else {
+        badgeRol.textContent = `👀 Modo Espectador`;
+      }
 
-      L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-        attribution: '&copy; OpenStreetMap contributors'
-      }).addTo(mapa);
+      if (perfilNegocio) {
+        bannerNombre.textContent = `${perfilNegocio.nombre} (${perfilNegocio.giro})`;
+        bannerDetalle.textContent = `📍 Zona: ${perfilNegocio.zona} ${perfilNegocio.notas ? "· " + perfilNegocio.notas : ""}`;
 
-      capaMarcadores = L.layerGroup().addTo(mapa);
-      dibujarMarcadoresMapa();
+        // Autocompletar el formulario de recolección con los datos guardados del negocio
+        document.getElementById("input-negocio").value = perfilNegocio.nombre;
+        document.getElementById("input-giro").value = perfilNegocio.giro;
+        document.getElementById("input-zona").value = perfilNegocio.zona;
+        document.getElementById("input-notas").value = perfilNegocio.notas || "";
+      } else {
+        bannerNombre.textContent = "Sin perfil guardado (Modo Libre)";
+        bannerDetalle.textContent = "Guarda los datos de tu restaurante o casa para pedir recolecciones en 1 clic.";
+      }
     }
 
-    function dibujarMarcadoresMapa() {
-      if (!mapa || !capaMarcadores) return;
-      capaMarcadores.clearLayers();
+    function abrirModalRol() {
+      const modal = document.getElementById("modal-rol");
+      modal.classList.remove("hidden");
+      modal.classList.add("flex");
 
-      const filtroZona = document.getElementById("filtro-zona-mapa").value;
+      if (perfilNegocio) {
+        document.getElementById("perfil-nombre").value = perfilNegocio.nombre;
+        document.getElementById("perfil-giro").value = perfilNegocio.giro;
+        document.getElementById("perfil-zona").value = perfilNegocio.zona;
+        document.getElementById("perfil-notas").value = perfilNegocio.notas || "";
+      }
+    }
 
-      // 1. Dibujar los Centros de Acopio Fijos (Pines Verdes)
+    function abrirModalConFormularioNegocio() {
+      abrirModalRol();
+      mostrarFormularioPerfilNegocio();
+    }
+
+    function cerrarModalRol() {
+      const modal = document.getElementById("modal-rol");
+      modal.classList.add("hidden");
+      modal.classList.remove("flex");
+    }
+
+    function mostrarFormularioPerfilNegocio() {
+      const form = document.getElementById("form-perfil-negocio");
+      form.classList.remove("hidden");
+      document.getElementById("perfil-nombre").focus();
+    }
+
+    function seleccionarModo(modo) {
+      rolActual = modo;
+      localStorage.setItem("ecoaceite_rol_activo", modo);
+      actualizarUIconPerfil();
+      cerrarModalRol();
+
+      if (modo === "espectador") {
+        cambiarVista("impacto");
+        mostrarToast("Modo Espectador", "Explorando mapa e impacto ambiental en vivo.", "👀");
+      } else if (modo === "recolector") {
+        cambiarVista("recolector");
+        mostrarToast("Modo Recolector", "Hoja de ruta activa lista para confirmar entregas.", "🚚");
+      }
+    }
+
+    document.getElementById("form-perfil-negocio").addEventListener("submit", (e) => {
+      e.preventDefault();
+      const nombre = document.getElementById("perfil-nombre").value.trim();
+      const giro = document.getElementById("perfil-giro").value;
+      const zona = document.getElementById("perfil-zona").value;
+      const notas = document.getElementById("perfil-notas").value.trim();
+
+      if (!nombre) return;
+
+      perfilNegocio = { nombre, giro, zona, notas };
+      rolActual = "negocio";
+      localStorage.setItem("ecoaceite_perfil_negocio", JSON.stringify(perfilNegocio));
+      localStorage.setItem("ecoaceite_rol_activo", "negocio");
+
+      actualizarUIconPerfil();
+      cerrarModalRol();
+      cambiarVista("restaurante");
+      renderizarTodo();
+      mostrarToast("¡Negocio Guardado!", `Bienvenido, ${nombre}. Tus datos ya están listos.`, "🏪");
+    });
+
+    function cambiarFiltroPropias(tipo) {
+      filtroBitacoraPropias = tipo;
+      const btnTodas = document.getElementById("tab-bitacora-todas");
+      const btnMias = document.getElementById("tab-bitacora-mias");
+
+      if (tipo === "mias") {
+        btnMias.className = "px-3 py-1.5 rounded-lg bg-white text-emerald-800 shadow-sm transition";
+        btnTodas.className = "px-3 py-1.5 rounded-lg text-slate-600 hover:text-slate-900 transition";
+      } else {
+        btnTodas.className = "px-3 py-1.5 rounded-lg bg-white text-slate-800 shadow-sm transition";
+        btnMias.className = "px-3 py-1.5 rounded-lg text-slate-600 hover:text-slate-900 transition";
+      }
+      renderizarTodo();
+    }
+
+    // =====================================================================
+    // 3. MAPAS LEAFLET (ESTABILIZADOS SIN BUGS AL CAMBIAR DE PESTAÑA)
+    // =====================================================================
+    function inicializarMapaEspectador() {
+      if (!mapaEspectador) {
+        mapaEspectador = L.map("mapa-espectador").setView([31.8550, -116.6200], 12);
+        L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+          attribution: "&copy; OpenStreetMap"
+        }).addTo(mapaEspectador);
+        capaMarcadoresEspectador = L.layerGroup().addTo(mapaEspectador);
+      }
+      setTimeout(() => {
+        mapaEspectador.invalidateSize();
+        dibujarMarcadoresEnCapa(capaMarcadoresEspectador, false);
+      }, 120);
+    }
+
+    function inicializarMapaRecolector() {
+      if (!mapa) {
+        mapa = L.map("mapa").setView([31.8550, -116.6200], 12);
+        L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+          attribution: "&copy; OpenStreetMap"
+        }).addTo(mapa);
+        capaMarcadores = L.layerGroup().addTo(mapa);
+      }
+      setTimeout(() => {
+        mapa.invalidateSize();
+        dibujarMarcadoresEnCapa(capaMarcadores, true);
+      }, 120);
+    }
+
+    function dibujarMarcadoresEnCapa(capa, permitirConfirmar) {
+      if (!capa) return;
+      capa.clearLayers();
+
+      const filtroZona = permitirConfirmar
+        ? document.getElementById("filtro-zona-mapa").value
+        : "todas";
+
+      // 1. Pines Verdes: Centros de Acopio Fijos
       const iconoFijo = L.divIcon({
         className: "custom-pin",
-        html: `<div style="background:#059669;color:white;width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:15px;border:3px solid white;box-shadow:0 4px 10px rgba(0,0,0,0.25);">♻️</div>`,
-        iconSize: [32, 32],
-        iconAnchor: [16, 16]
+        html: `<div style="background:#059669;color:white;width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;border:3px solid white;box-shadow:0 3px 8px rgba(0,0,0,0.25);">♻️</div>`,
+        iconSize: [30, 30],
+        iconAnchor: [15, 15]
       });
 
       CENTROS_ACOPIO_FIJOS.forEach((centro) => {
         const marker = L.marker([centro.lat, centro.lng], { icon: iconoFijo });
         marker.bindPopup(`
-          <div style="font-family:'Plus Jakarta Sans',sans-serif;min-width:190px;">
-            <span style="background:#d1fae5;color:#065f46;font-size:10px;font-weight:800;padding:2px 7px;border-radius:99px;text-transform:uppercase;">Centro de Acopio Fijo</span>
+          <div style="font-family:'Plus Jakarta Sans',sans-serif;min-width:185px;">
+            <span style="background:#d1fae5;color:#065f46;font-size:10px;font-weight:800;padding:2px 7px;border-radius:99px;">CENTRO DE ACOPIO FIJO</span>
             <h4 style="font-weight:800;font-size:13px;margin:6px 0 2px;color:#0f172a;">${centro.nombre}</h4>
-            <p style="font-size:11px;color:#475569;margin:0 0 4px;">📍 ${centro.direccion}</p>
+            <p style="font-size:11px;color:#475569;margin:0 0 3px;">📍 ${centro.direccion}</p>
             <p style="font-size:11px;color:#059669;font-weight:700;margin:0;">🕒 ${centro.horario}</p>
           </div>
         `);
-        capaMarcadores.addLayer(marker);
+        capa.addLayer(marker);
       });
 
-      // 2. Dibujar Solicitudes Pendientes de Comercios (Pines Ámbar)
+      // 2. Pines Ámbar: Solicitudes Pendientes
       const iconoPendiente = L.divIcon({
         className: "custom-pin",
-        html: `<div style="background:#f59e0b;color:#0f172a;width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:17px;border:3px solid white;box-shadow:0 4px 12px rgba(245,158,11,0.5);font-weight:bold;">🛢️</div>`,
+        html: `<div style="background:#f59e0b;color:#0f172a;width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:17px;border:3px solid white;box-shadow:0 4px 12px rgba(245,158,11,0.55);font-weight:bold;">🛢️</div>`,
         iconSize: [36, 36],
         iconAnchor: [18, 18]
       });
@@ -748,31 +1027,42 @@
         .filter((s) => filtroZona === "todas" || s.zona === filtroZona)
         .forEach((item) => {
           const marker = L.marker([item.lat, item.lng], { icon: iconoPendiente });
+          const botonConfirmarHTML = permitirConfirmar
+            ? `<button onclick="marcarComoRecolectado('${item.id}')"
+                style="margin-top:8px;width:100%;background:#059669;color:white;border:none;padding:7px 10px;border-radius:8px;font-size:11px;font-weight:800;cursor:pointer;">
+                ✅ Confirmar Recolección (${item.litros} L)
+              </button>`
+            : `<p style="margin-top:6px;font-size:10px;color:#059669;font-weight:700;">💧 Protegerá ${(item.litros * 1000).toLocaleString("es-MX")} L de agua</p>`;
+
           marker.bindPopup(`
             <div style="font-family:'Plus Jakarta Sans',sans-serif;min-width:210px;">
               <span style="background:#fef3c7;color:#92400e;font-size:10px;font-weight:800;padding:2px 7px;border-radius:99px;">⏳ PENDIENTE · ${item.litros} LITROS</span>
               <h4 style="font-weight:800;font-size:14px;margin:6px 0 2px;color:#0f172a;">${item.negocio}</h4>
               <p style="font-size:11px;color:#475569;margin:0 0 3px;">📍 ${item.zona} (${item.contenedor})</p>
               ${item.notas ? `<p style="font-size:11px;color:#64748b;background:#f8fafc;padding:4px 6px;border-radius:6px;margin:4px 0;">📝 ${item.notas}</p>` : ""}
-              <button onclick="marcarComoRecolectado('${item.id}')"
-                style="margin-top:8px;width:100%;background:#059669;color:white;border:none;padding:7px 10px;border-radius:8px;font-size:11px;font-weight:800;cursor:pointer;">
-                ✅ Confirmar Recolección (${item.litros} L)
-              </button>
+              ${botonConfirmarHTML}
             </div>
           `);
-          capaMarcadores.addLayer(marker);
+          capa.addLayer(marker);
         });
     }
 
     function centrarMapaEnsenada() {
       if (mapa) {
+        mapa.invalidateSize();
         mapa.setView([31.8550, -116.6200], 12);
-        mostrarToast("Mapa centrado", "Vista general de Ensenada restablecida", "🗺️");
+      }
+    }
+
+    function centrarMapaEspectador() {
+      if (mapaEspectador) {
+        mapaEspectador.invalidateSize();
+        mapaEspectador.setView([31.8550, -116.6200], 12);
       }
     }
 
     // =====================================================================
-    // 3. SINCRONIZACIÓN DE DATOS (FIREBASE O LOCALSTORAGE)
+    // 4. SINCRONIZACIÓN EN TIEMPO REAL CON FIREBASE
     // =====================================================================
     function iniciarConexionDatos() {
       const indicadorPulso = document.getElementById("indicador-pulso");
@@ -790,42 +1080,35 @@
           onValue(solicitudesRef, (snapshot) => {
             const data = snapshot.val();
             if (!data) {
-              // Si la base de datos en Firebase está vacía, cargamos los datos demo iniciales
-              DATOS_DEMO_INICIALES.forEach((item) => {
-                const nuevoRef = push(solicitudesRef);
-                set(nuevoRef, { ...item, id: nuevoRef.key });
-              });
+              solicitudes = [];
             } else {
-              solicitudes = Object.entries(data).map(([key, val]) => ({
-                ...val,
-                id: key
-              })).reverse();
-              renderizarTodo();
+              solicitudes = Object.entries(data)
+                .map(([key, val]) => ({
+                  ...val,
+                  id: key
+                }))
+                .sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
             }
+            renderizarTodo();
           });
           return;
         } catch (err) {
-          console.warn("Error iniciando Firebase, cambiando a modo local:", err);
+          console.warn("Error iniciando Firebase, usando respaldo local:", err);
         }
       }
 
-      // Modo Local (Respaldo automático si aún no se pega API Key de Firebase)
-      const guardados = localStorage.getItem("ecoaceite_ensenada_v1");
-      if (guardados) {
-        solicitudes = JSON.parse(guardados);
-      } else {
-        solicitudes = [...DATOS_DEMO_INICIALES];
-        guardarEnLocal();
-      }
+      // Respaldo Local
+      const guardados = localStorage.getItem("ecoaceite_ensenada_v2");
+      solicitudes = guardados ? JSON.parse(guardados) : [...DATOS_DEMO_INICIALES];
       renderizarTodo();
     }
 
     function guardarEnLocal() {
-      localStorage.setItem("ecoaceite_ensenada_v1", JSON.stringify(solicitudes));
+      localStorage.setItem("ecoaceite_ensenada_v2", JSON.stringify(solicitudes));
     }
 
     // =====================================================================
-    // 4. ACCIONES CRUD: CREAR SOLICITUD Y COMPLETAR RECOLECCIÓN
+    // 5. ACCIONES CRUD: PUBLICAR, RECOLECTAR Y GESTIÓN SEGURA DE DEMOS
     // =====================================================================
     document.getElementById("form-solicitud").addEventListener("submit", (e) => {
       e.preventDefault();
@@ -836,10 +1119,19 @@
       const litros = Number(document.getElementById("input-litros").value);
       const contenedor = document.getElementById("input-contenedor").value;
       const notas = document.getElementById("input-notas").value.trim();
+      const recordarPerfil = document.getElementById("check-guardar-perfil").checked;
 
       if (!negocio || litros <= 0) return;
 
-      // Coordenada de la zona con pequeña dispersión aleatoria para no encimar pines
+      // Si dejó marcada la casilla, guardamos su negocio para próximas visitas
+      if (recordarPerfil) {
+        perfilNegocio = { nombre: negocio, giro, zona, notas };
+        rolActual = "negocio";
+        localStorage.setItem("ecoaceite_perfil_negocio", JSON.stringify(perfilNegocio));
+        localStorage.setItem("ecoaceite_rol_activo", "negocio");
+        actualizarUIconPerfil();
+      }
+
       const baseCoord = COORDENADAS_ZONAS[zona] || [31.8645, -116.6235];
       const lat = Number((baseCoord[0] + (Math.random() - 0.5) * 0.008).toFixed(5));
       const lng = Number((baseCoord[1] + (Math.random() - 0.5) * 0.008).toFixed(5));
@@ -849,6 +1141,7 @@
 
       const nuevaSolicitud = {
         id: "sol-" + Date.now(),
+        esDemo: false,
         negocio,
         giro,
         zona,
@@ -858,7 +1151,8 @@
         lat,
         lng,
         estado: "pendiente",
-        fecha: `Hoy, ${horaFormateada}`
+        fecha: `Hoy, ${horaFormateada}`,
+        timestamp: Date.now()
       };
 
       if (usarFirebase && solicitudesRef) {
@@ -870,11 +1164,12 @@
         renderizarTodo();
       }
 
-      e.target.reset();
+      // Solo limpiamos los litros para que su perfil siga listo
+      document.getElementById("input-litros").value = "";
       actualizarPreviewImpacto();
       mostrarToast(
         "¡Solicitud Publicada!",
-        `${negocio} (${litros} L) ya aparece en el mapa de Ensenada.`,
+        `${negocio} (${litros} L) ya está activo en el mapa de Ensenada.`,
         "🚀"
       );
     });
@@ -907,24 +1202,54 @@
       );
     }
 
-    function restaurarDatosDemo() {
-      if (usarFirebase && solicitudesRef) {
-        set(solicitudesRef, null).then(() => {
-          DATOS_DEMO_INICIALES.forEach((item) => {
-            const nuevoRef = push(solicitudesRef);
-            set(nuevoRef, { ...item, id: nuevoRef.key });
-          });
+    // AGREGA DEMOS SIN BORRAR TUS REGISTROS REALES
+    function agregarDatosDemoSeguros() {
+      if (usarFirebase && db) {
+        DATOS_DEMO_INICIALES.forEach((item) => {
+          const demoRef = ref(db, `solicitudes/${item.keyDemo}`);
+          set(demoRef, { ...item, id: item.keyDemo });
         });
       } else {
-        solicitudes = JSON.parse(JSON.stringify(DATOS_DEMO_INICIALES));
+        DATOS_DEMO_INICIALES.forEach((item) => {
+          const idx = solicitudes.findIndex((s) => s.id === item.keyDemo);
+          if (idx >= 0) {
+            solicitudes[idx] = { ...item, id: item.keyDemo };
+          } else {
+            solicitudes.push({ ...item, id: item.keyDemo });
+          }
+        });
         guardarEnLocal();
         renderizarTodo();
       }
-      mostrarToast("Datos Restaurados", "Se recargaron las solicitudes de demostración en Ensenada", "🔄");
+      mostrarToast(
+        "Ejemplos Agregados",
+        "Se cargaron los puntos de prueba conservando intactos tus registros reales.",
+        "➕"
+      );
+    }
+
+    // LIMPIA ÚNICAMENTE LOS DEMOS Y DEJA TUS NEGOCIOS REALES
+    function limpiarSoloDemos() {
+      if (usarFirebase && db) {
+        solicitudes.forEach((s) => {
+          if (s.esDemo || String(s.id).startsWith("demo") || String(s.fecha).startsWith("Ayer") || s.negocio === "Mariscos Bahía de Todos Santos") {
+            remove(ref(db, `solicitudes/${s.id}`));
+          }
+        });
+      } else {
+        solicitudes = solicitudes.filter((s) => !s.esDemo && !String(s.id).startsWith("demo"));
+        guardarEnLocal();
+        renderizarTodo();
+      }
+      mostrarToast(
+        "Demos Eliminados",
+        "Se quitaron los datos de ejemplo. Tus registros reales siguen intactos.",
+        "🧹"
+      );
     }
 
     // =====================================================================
-    // 5. RENDERIZADO DE MÉTRICAS, BITÁCORA Y HOJA DE RUTA
+    // 6. RENDERIZADO GENERAL DE MÉTRICAS, MAPAS Y LISTAS
     // =====================================================================
     function renderizarTodo() {
       const pendientes = solicitudes.filter((s) => s.estado === "pendiente");
@@ -936,13 +1261,11 @@
       const totalCO2Evitado = Math.round(totalAceiteRecolectado * 2.5);
       const totalLitrosPendientes = pendientes.reduce((acc, s) => acc + Number(s.litros), 0);
 
-      // Actualizar contadores principales
       document.getElementById("stat-aceite").textContent = totalAceiteRecolectado.toLocaleString("es-MX");
       document.getElementById("stat-agua").textContent = totalAguaProtegida.toLocaleString("es-MX");
       document.getElementById("stat-biodiesel").textContent = totalBiodiesel.toLocaleString("es-MX");
       document.getElementById("stat-completadas").textContent = completadas.length;
 
-      // Actualizar barra de meta mensual (Meta = 500 L)
       const metaMensual = 500;
       const porcentaje = Math.min(100, Math.round((totalAceiteRecolectado / metaMensual) * 100));
       document.getElementById("meta-actual").textContent = totalAceiteRecolectado.toLocaleString("es-MX");
@@ -951,14 +1274,47 @@
       document.getElementById("stat-co2").textContent = `${totalCO2Evitado.toLocaleString("es-MX")} kg CO₂`;
       document.getElementById("stat-pendientes-hero").textContent = `${pendientes.length} comercios`;
 
-      // Actualizar badges de recolector
       document.getElementById("badge-pendientes").textContent = pendientes.length;
       document.getElementById("recolector-paradas").textContent = `${pendientes.length} puntos`;
       document.getElementById("recolector-litros-pendientes").textContent = `${totalLitrosPendientes} Litros`;
 
+      renderizarFeedEspectador();
       renderizarBitacora();
       renderizarHojaDeRuta(pendientes);
-      dibujarMarcadoresMapa();
+      dibujarMarcadoresEnCapa(capaMarcadoresEspectador, false);
+      dibujarMarcadoresEnCapa(capaMarcadores, true);
+    }
+
+    function renderizarFeedEspectador() {
+      const feed = document.getElementById("feed-espectador");
+      if (solicitudes.length === 0) {
+        feed.innerHTML = `<p class="text-xs text-slate-400 text-center py-8">Aún no hay solicitudes registradas.</p>`;
+        return;
+      }
+
+      feed.innerHTML = solicitudes
+        .slice(0, 8)
+        .map((item) => {
+          const esPendiente = item.estado === "pendiente";
+          return `
+            <div class="p-3 rounded-2xl border ${esPendiente ? "bg-amber-50/40 border-amber-200/70" : "bg-slate-50 border-slate-200/70"} flex items-center justify-between gap-2">
+              <div>
+                <div class="flex items-center gap-1.5">
+                  <span class="text-[10px] font-extrabold uppercase px-2 py-0.5 rounded-full ${esPendiente ? "bg-amber-100 text-amber-800" : "bg-emerald-100 text-emerald-800"}">
+                    ${esPendiente ? "⏳ Pendiente" : "✅ Recolectado"}
+                  </span>
+                  <span class="text-[11px] text-slate-400">${item.zona}</span>
+                </div>
+                <p class="font-bold text-slate-800 text-xs mt-1">${item.negocio}</p>
+              </div>
+              <div class="text-right shrink-0">
+                <strong class="text-sm font-extrabold ${esPendiente ? "text-amber-600" : "text-emerald-700"}">${item.litros} L</strong>
+                <span class="block text-[10px] text-sky-700">${(item.litros * 1000).toLocaleString("es-MX")} L agua</span>
+              </div>
+            </div>
+          `;
+        })
+        .join("");
     }
 
     function renderizarBitacora() {
@@ -972,13 +1328,20 @@
           s.zona.toLowerCase().includes(busqueda) ||
           (s.giro && s.giro.toLowerCase().includes(busqueda));
         const coincideEstado = filtroEstado === "todos" || s.estado === filtroEstado;
-        return coincideTexto && coincideEstado;
+        const coincidePropia =
+          filtroBitacoraPropias === "todas" ||
+          (perfilNegocio && s.negocio.toLowerCase() === perfilNegocio.nombre.toLowerCase());
+        return coincideTexto && coincideEstado && coincidePropia;
       });
 
       if (filtradas.length === 0) {
         contenedor.innerHTML = `
           <div class="text-center py-10 text-slate-400 text-xs">
-            No se encontraron registros con ese filtro.
+            ${
+              filtroBitacoraPropias === "mias" && !perfilNegocio
+                ? "Primero guarda el perfil de tu negocio arriba para filtrar tus solicitudes."
+                : "No se encontraron registros con ese filtro."
+            }
           </div>
         `;
         return;
@@ -1010,7 +1373,7 @@
                 ${
                   esPendiente
                     ? `<button onclick="irAlMapaYEnfocar(${item.lat}, ${item.lng})" class="text-[11px] text-emerald-700 hover:underline font-bold">Ver en mapa →</button>`
-                    : `<span class="text-[11px] text-slate-400 font-medium">Procesado</span>`
+                    : `<span class="text-[11px] text-slate-400 font-medium">Completado</span>`
                 }
               </div>
             </div>
@@ -1032,7 +1395,7 @@
           <div class="text-center py-12 px-4 bg-emerald-50/50 rounded-2xl border border-emerald-100">
             <span class="text-3xl">🎉</span>
             <p class="text-sm font-bold text-emerald-900 mt-2">¡Ruta limpia en esta zona!</p>
-            <p class="text-xs text-emerald-700 mt-1">Todas las solicitudes pendientes han sido recolectadas.</p>
+            <p class="text-xs text-emerald-700 mt-1">No hay recolecciones pendientes por ahora.</p>
           </div>
         `;
         return;
@@ -1075,7 +1438,7 @@
     }
 
     // =====================================================================
-    // 6. NAVEGACIÓN, SIMULADOR Y UTILIDADES DE INTERFAZ
+    // 7. NAVEGACIÓN Y UTILIDADES
     // =====================================================================
     function cambiarVista(vista) {
       const vistas = ["impacto", "restaurante", "recolector"];
@@ -1091,17 +1454,17 @@
       btnActivo.className =
         "nav-btn flex-1 md:flex-initial px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all bg-emerald-500 text-slate-950 shadow-md flex items-center justify-center gap-2";
 
-      if (vista === "recolector") {
-        inicializarMapa();
-        setTimeout(() => {
-          if (mapa) mapa.invalidateSize();
-        }, 150);
+      if (vista === "impacto") {
+        inicializarMapaEspectador();
+      } else if (vista === "recolector") {
+        inicializarMapaRecolector();
       }
       window.scrollTo({ top: 0, behavior: "smooth" });
     }
 
     function enfocarPinMapa(lat, lng) {
       if (!mapa) return;
+      mapa.invalidateSize();
       mapa.setView([lat, lng], 15, { animate: true });
     }
 
@@ -1146,20 +1509,35 @@
       }, 3800);
     }
 
-    // Exponer funciones al objeto global window para que funcionen los botones HTML
+    // Exponer funciones al DOM
     window.cambiarVista = cambiarVista;
     window.actualizarCalculadora = actualizarCalculadora;
     window.actualizarPreviewImpacto = actualizarPreviewImpacto;
     window.renderizarTodo = renderizarTodo;
     window.centrarMapaEnsenada = centrarMapaEnsenada;
-    window.restaurarDatosDemo = restaurarDatosDemo;
+    window.centrarMapaEspectador = centrarMapaEspectador;
+    window.agregarDatosDemoSeguros = agregarDatosDemoSeguros;
+    window.limpiarSoloDemos = limpiarSoloDemos;
     window.marcarComoRecolectado = marcarComoRecolectado;
     window.enfocarPinMapa = enfocarPinMapa;
     window.irAlMapaYEnfocar = irAlMapaYEnfocar;
+    window.abrirModalRol = abrirModalRol;
+    window.abrirModalConFormularioNegocio = abrirModalConFormularioNegocio;
+    window.cerrarModalRol = cerrarModalRol;
+    window.mostrarFormularioPerfilNegocio = mostrarFormularioPerfilNegocio;
+    window.seleccionarModo = seleccionarModo;
+    window.cambiarFiltroPropias = cambiarFiltroPropias;
 
-    // Iniciar aplicación al cargar la página
+    // Inicializar todo al abrir
+    actualizarUIconPerfil();
     iniciarConexionDatos();
     actualizarCalculadora();
+    inicializarMapaEspectador();
+
+    // Si es la primera vez que entra el usuario, mostrar el selector de rol
+    if (!localStorage.getItem("ecoaceite_rol_activo")) {
+      abrirModalRol();
+    }
   </script>
 </body>
 </html>
