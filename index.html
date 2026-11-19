@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>EcoAceite Ensenada | Plataforma de Logística Circular y Protección Hídrica</title>
+  <title>Estrategia Digital de Economía Circular | Prevención de Contaminación Hídrica por Aceite Vegetal en Ensenada</title>
 
   <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
@@ -36,14 +36,17 @@
   <!-- =================================================================== -->
   <div id="modal-rol" class="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm hidden items-center justify-center p-4">
     <div class="bg-white rounded-3xl max-w-2xl w-full p-6 sm:p-8 shadow-2xl border border-slate-200 fade-in max-h-[92vh] overflow-y-auto">
-      <div class="flex items-center justify-between pb-4 border-b border-slate-100">
-        <div class="flex items-center gap-3">
-          <div class="w-11 h-11 rounded-2xl bg-emerald-600 text-white flex items-center justify-center text-2xl shadow">
+      <div class="flex items-start justify-between gap-3 pb-4 border-b border-slate-100">
+        <div class="flex items-start gap-3">
+          <div class="w-11 h-11 rounded-2xl bg-emerald-700 text-white flex items-center justify-center text-2xl shadow shrink-0">
             ♻️
           </div>
           <div>
-            <h2 class="text-xl font-extrabold text-slate-900">Bienvenido a EcoAceite Ensenada</h2>
-            <p class="text-xs text-slate-500">Selecciona cómo deseas interactuar con la plataforma</p>
+            <span class="text-[10px] font-bold uppercase tracking-wider text-emerald-700">Proyecto de Desarrollo Sustentable · Ensenada, B.C.</span>
+            <h2 class="text-base sm:text-lg font-extrabold text-slate-900 leading-snug mt-0.5">
+              Estrategia Digital de Economía Circular para la Prevención de Contaminación Hídrica por Aceite Vegetal en Ensenada
+            </h2>
+            <p class="text-xs text-slate-500 mt-1">Selecciona tu perfil operativo para ingresar a la plataforma</p>
           </div>
         </div>
         <button onclick="cerrarModalRol()" class="text-slate-400 hover:text-slate-700 text-xl font-bold px-2">✕</button>
@@ -58,7 +61,7 @@
             <span class="text-2xl">👀</span>
             <h3 class="font-extrabold text-slate-800 text-sm mt-2 group-hover:text-emerald-800">Modo Espectador</h3>
             <p class="text-[11px] text-slate-500 mt-1 leading-relaxed">
-              Explora métricas de agua protegida, el mapa en vivo de Ensenada y la bitácora sin modificar datos.
+              Consulta métricas de agua protegida, el mapa comunitario en vivo y la bitácora sin modificar datos.
             </p>
           </div>
           <span class="mt-4 inline-block text-[11px] font-bold text-emerald-700">Entrar como visitante →</span>
@@ -69,12 +72,12 @@
           class="p-4 rounded-2xl border-2 border-emerald-500 bg-emerald-50/50 hover:bg-emerald-100/50 text-left transition flex flex-col justify-between">
           <div>
             <span class="text-2xl">🍳</span>
-            <h3 class="font-extrabold text-emerald-950 text-sm mt-2">Soy Negocio / Hogar</h3>
+            <h3 class="font-extrabold text-emerald-950 text-sm mt-2">Soy Generador / Comercio</h3>
             <p class="text-[11px] text-emerald-800/80 mt-1 leading-relaxed">
-              Guarda los datos de tu restaurante o casa para pedir recolecciones en 1 clic y llevar tu historial.
+              Guarda los datos de tu restaurante o domicilio para solicitar recolecciones en 1 clic y consultar tu historial.
             </p>
           </div>
-          <span class="mt-4 inline-block text-[11px] font-extrabold text-emerald-700">Configurar mi negocio →</span>
+          <span class="mt-4 inline-block text-[11px] font-extrabold text-emerald-700">Configurar perfil →</span>
         </button>
 
         <!-- Rol 3: Recolector -->
@@ -91,16 +94,16 @@
         </button>
       </div>
 
-      <!-- Sub-formulario para guardar perfil del Negocio -->
+      <!-- Sub-formulario para guardar perfil del Generador -->
       <form id="form-perfil-negocio" class="hidden bg-slate-50 p-5 rounded-2xl border border-slate-200 space-y-4">
         <div class="flex items-center justify-between">
-          <h4 class="text-sm font-extrabold text-slate-800">📌 Guardar Perfil de mi Comercio o Casa</h4>
+          <h4 class="text-sm font-extrabold text-slate-800">📌 Guardar Perfil del Generador (Comercio o Hogar)</h4>
           <span class="text-[11px] text-emerald-700 font-semibold">Se recordará en este dispositivo</span>
         </div>
 
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
           <div>
-            <label class="block text-xs font-bold text-slate-700 mb-1">Nombre del Negocio / Hogar *</label>
+            <label class="block text-xs font-bold text-slate-700 mb-1">Nombre del Establecimiento / Hogar *</label>
             <input type="text" id="perfil-nombre" required placeholder="Ej. Mariscos El Puerto"
               class="w-full px-3 py-2 rounded-xl border border-slate-300 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500">
           </div>
@@ -138,7 +141,7 @@
 
         <button type="submit"
           class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold py-2.5 rounded-xl text-xs sm:text-sm transition shadow">
-          Guardar Mi Negocio y Continuar →
+          Guardar Perfil y Continuar →
         </button>
       </form>
     </div>
@@ -150,7 +153,7 @@
       🌿
     </div>
     <div>
-      <p id="toast-titulo" class="text-xs font-bold uppercase tracking-wider text-emerald-400">EcoAceite Ensenada</p>
+      <p id="toast-titulo" class="text-xs font-bold uppercase tracking-wider text-emerald-400">Economía Circular AVU</p>
       <p id="toast-mensaje" class="text-sm font-medium text-slate-100 mt-0.5">Acción completada con éxito</p>
     </div>
   </div>
@@ -163,7 +166,7 @@
           <span id="indicador-pulso" class="w-2 h-2 rounded-full bg-amber-400 animate-pulse"></span>
           <span id="texto-db" class="font-medium text-[11px]">Conectando...</span>
         </div>
-        <span class="hidden sm:inline text-emerald-400/80">Ensenada, B.C.</span>
+        <span class="hidden md:inline text-emerald-400/80">Desarrollo Sustentable · Ensenada, Baja California</span>
       </div>
 
       <!-- Indicador de Perfil / Botón Cambiar Rol -->
@@ -181,34 +184,34 @@
 
   <!-- Header Principal y Navegación -->
   <header class="bg-emerald-900 text-white shadow-lg sticky top-0 z-40 border-b border-emerald-800">
-    <div class="max-w-7xl mx-auto px-4 py-3.5 flex flex-col md:flex-row items-center justify-between gap-3.5">
+    <div class="max-w-7xl mx-auto px-4 py-3.5 flex flex-col lg:flex-row items-center justify-between gap-3.5">
       <div class="flex items-center gap-3 cursor-pointer" onclick="cambiarVista('impacto')">
-        <div class="w-11 h-11 rounded-2xl bg-gradient-to-br from-emerald-400 to-teal-600 flex items-center justify-center text-2xl shadow-inner border border-white/20">
+        <div class="w-11 h-11 rounded-2xl bg-gradient-to-br from-emerald-400 to-teal-600 flex items-center justify-center text-2xl shadow-inner border border-white/20 shrink-0">
           ♻️
         </div>
         <div>
-          <div class="flex items-center gap-2">
-            <h1 class="text-xl font-extrabold tracking-tight leading-none">
-              EcoAceite <span class="text-emerald-400">Ensenada</span>
+          <div class="flex flex-wrap items-center gap-2">
+            <h1 class="text-base sm:text-lg font-extrabold tracking-tight leading-tight">
+              Estrategia Digital de <span class="text-emerald-400">Economía Circular</span>
             </h1>
-            <span class="bg-emerald-800 text-emerald-300 text-[10px] font-bold px-2 py-0.5 rounded-md border border-emerald-700">Tiempo Real</span>
+            <span class="bg-emerald-800 text-emerald-300 text-[10px] font-bold px-2 py-0.5 rounded-md border border-emerald-700">AVU · Ensenada</span>
           </div>
-          <p class="text-xs text-emerald-200/80 mt-1">Logística Circular de Aceite Vegetal Usado (AVU)</p>
+          <p class="text-[11px] sm:text-xs text-emerald-200/85 mt-0.5">Prevención de Contaminación Hídrica por Aceite Vegetal en Ensenada</p>
         </div>
       </div>
 
       <!-- Botonera de Vistas -->
-      <nav class="flex bg-emerald-950/80 p-1.5 rounded-2xl border border-emerald-800/80 w-full md:w-auto">
+      <nav class="flex bg-emerald-950/80 p-1.5 rounded-2xl border border-emerald-800/80 w-full lg:w-auto shrink-0">
         <button onclick="cambiarVista('impacto')" id="btn-impacto"
-          class="nav-btn flex-1 md:flex-initial px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all bg-emerald-500 text-slate-950 shadow-md flex items-center justify-center gap-1.5">
+          class="nav-btn flex-1 lg:flex-initial px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all bg-emerald-500 text-slate-950 shadow-md flex items-center justify-center gap-1.5">
           🌎 Impacto &amp; Mapa
         </button>
         <button onclick="cambiarVista('restaurante')" id="btn-restaurante"
-          class="nav-btn flex-1 md:flex-initial px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all text-emerald-200 hover:text-white flex items-center justify-center gap-1.5">
-          🍳 Mi Negocio
+          class="nav-btn flex-1 lg:flex-initial px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all text-emerald-200 hover:text-white flex items-center justify-center gap-1.5">
+          🍳 Generador
         </button>
         <button onclick="cambiarVista('recolector')" id="btn-recolector"
-          class="nav-btn flex-1 md:flex-initial px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all text-emerald-200 hover:text-white flex items-center justify-center gap-2">
+          class="nav-btn flex-1 lg:flex-initial px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all text-emerald-200 hover:text-white flex items-center justify-center gap-2">
           <span>🚚 Ruta Recolector</span>
           <span id="badge-pendientes" class="bg-amber-400 text-slate-950 text-xs font-extrabold px-2 py-0.5 rounded-full shadow">0</span>
         </button>
@@ -224,24 +227,24 @@
     <!-- =================================================================== -->
     <section id="vista-impacto" class="fade-in space-y-8">
 
-      <!-- Hero Banner con Meta Mensual -->
+      <!-- Hero Banner con Título Académico y Meta Mensual -->
       <div class="bg-gradient-to-br from-emerald-900 via-emerald-800 to-teal-900 rounded-3xl p-6 sm:p-10 text-white shadow-xl relative overflow-hidden border border-emerald-700/50">
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center relative z-10">
           <div class="lg:col-span-7 space-y-4">
             <div class="inline-flex items-center gap-2 bg-amber-400/15 border border-amber-400/30 text-amber-300 text-xs font-bold px-3.5 py-1.5 rounded-full">
-              <span>⚠️ Dato Crítico:</span>
+              <span>⚠️ Factor Hídrico:</span>
               <span>1 Litro de aceite contamina hasta 1,000 Litros de agua</span>
             </div>
-            <h2 class="text-2xl sm:text-4xl font-extrabold leading-tight tracking-tight">
-              Protegiendo la bahía y el drenaje de Ensenada en tiempo real
+            <h2 class="text-2xl sm:text-3xl font-extrabold leading-tight tracking-tight">
+              Estrategia Digital de Economía Circular para la Prevención de Contaminación Hídrica por Aceite Vegetal en Ensenada
             </h2>
             <p class="text-emerald-100/90 text-sm sm:text-base leading-relaxed">
-              Conectamos a restaurantes, carretas de mariscos, taquerías y hogares con recolectores autorizados para transformar el aceite usado en <strong>biodiésel, jabones biodegradables y productos limpios</strong>.
+              Plataforma de logística inversa en tiempo real que vincula a restaurantes, carretas de mariscos, taquerías y hogares con recolectores autorizados para valorizar el Aceite Vegetal Usado (AVU) en <strong>biodiésel, jabones biodegradables y glicerina</strong>.
             </p>
             <div class="flex flex-wrap gap-3 pt-2">
               <button onclick="cambiarVista('restaurante')"
                 class="bg-emerald-400 hover:bg-emerald-300 text-slate-950 font-extrabold px-5 py-3 rounded-xl text-xs sm:text-sm transition shadow-lg">
-                🍳 Registrar Recolección de mi Negocio
+                🍳 Registrar Solicitud de Recolección
               </button>
               <button onclick="abrirModalRol()"
                 class="bg-white/10 hover:bg-white/20 border border-white/20 text-white font-semibold px-5 py-3 rounded-xl text-xs sm:text-sm transition">
@@ -253,14 +256,14 @@
           <!-- Tarjeta de Meta Comunitaria Mensual -->
           <div class="lg:col-span-5 bg-emerald-950/70 backdrop-blur-sm p-6 rounded-2xl border border-emerald-700/60 space-y-4">
             <div class="flex items-center justify-between">
-              <span class="text-xs font-bold uppercase tracking-wider text-emerald-300">Meta Mensual Ensenada</span>
+              <span class="text-xs font-bold uppercase tracking-wider text-emerald-300">Meta Piloto Mensual Ensenada</span>
               <span id="porcentaje-meta" class="text-sm font-extrabold text-emerald-400">0%</span>
             </div>
             <div>
               <p class="text-3xl font-extrabold text-white">
                 <span id="meta-actual">0</span> <span class="text-base font-medium text-emerald-300">/ 500 Litros de AVU</span>
               </p>
-              <p class="text-xs text-emerald-200/70 mt-1">Equivalente a proteger 500,000 L de agua cada mes</p>
+              <p class="text-xs text-emerald-200/70 mt-1">Equivalente a proteger 500,000 litros de agua limpia al mes</p>
             </div>
             <div class="w-full bg-emerald-900 rounded-full h-3.5 overflow-hidden border border-emerald-700">
               <div id="barra-meta" class="bg-gradient-to-r from-emerald-400 to-teal-300 h-full rounded-full transition-all duration-500" style="width: 0%"></div>
@@ -272,7 +275,7 @@
               </div>
               <div>
                 <span class="text-emerald-300/80 block">Puntos Pendientes Hoy</span>
-                <strong id="stat-pendientes-hero" class="text-amber-300 text-sm">0 comercios</strong>
+                <strong id="stat-pendientes-hero" class="text-amber-300 text-sm">0 establecimientos</strong>
               </div>
             </div>
           </div>
@@ -286,7 +289,7 @@
             🛢️
           </div>
           <div>
-            <p class="text-[11px] font-bold uppercase tracking-wider text-slate-400">Aceite Recolectado</p>
+            <p class="text-[11px] font-bold uppercase tracking-wider text-slate-400">AVU Recuperado</p>
             <p class="text-2xl font-extrabold text-slate-800 mt-0.5">
               <span id="stat-aceite">0</span> <span class="text-sm font-semibold text-slate-500">Litros</span>
             </p>
@@ -310,7 +313,7 @@
             ⛽
           </div>
           <div>
-            <p class="text-[11px] font-bold uppercase tracking-wider text-emerald-700">Biodiésel Generable</p>
+            <p class="text-[11px] font-bold uppercase tracking-wider text-emerald-700">Biodiésel Potencial</p>
             <p class="text-2xl font-extrabold text-emerald-700 mt-0.5">
               <span id="stat-biodiesel">0</span> <span class="text-sm font-semibold text-emerald-600">Litros</span>
             </p>
@@ -335,8 +338,8 @@
         <div class="lg:col-span-7 bg-white p-5 rounded-3xl shadow-sm border border-slate-200/90 flex flex-col">
           <div class="flex flex-wrap items-center justify-between gap-2 mb-3">
             <div>
-              <span class="text-[11px] font-bold uppercase tracking-wider text-emerald-600">Vista Espectador en Vivo</span>
-              <h3 class="text-lg font-extrabold text-slate-800">🗺️ Mapa Comunitario de Ensenada</h3>
+              <span class="text-[11px] font-bold uppercase tracking-wider text-emerald-600">Transparencia Ambiental · Solo Lectura</span>
+              <h3 class="text-lg font-extrabold text-slate-800">🗺️ Mapa Comunitario de Acopio en Ensenada</h3>
             </div>
             <button onclick="centrarMapaEspectador()"
               class="text-xs bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold px-3 py-1.5 rounded-xl transition">
@@ -354,7 +357,7 @@
         <div class="lg:col-span-5 bg-white p-5 sm:p-6 rounded-3xl shadow-sm border border-slate-200/90 flex flex-col">
           <div class="mb-3 pb-3 border-b border-slate-100 flex items-center justify-between">
             <div>
-              <span class="text-[11px] font-bold uppercase tracking-wider text-emerald-600">Transparencia Comunitaria</span>
+              <span class="text-[11px] font-bold uppercase tracking-wider text-emerald-600">Trazabilidad en Tiempo Real</span>
               <h3 class="text-lg font-extrabold text-slate-800">Últimos Movimientos</h3>
             </div>
             <span class="text-[11px] bg-slate-100 text-slate-600 font-bold px-2.5 py-1 rounded-full">Solo lectura</span>
@@ -369,8 +372,8 @@
       <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
         <div class="lg:col-span-7 bg-white p-6 sm:p-7 rounded-3xl shadow-sm border border-slate-200/90 space-y-5">
           <div>
-            <span class="text-xs font-bold uppercase tracking-wider text-emerald-600">Economía Circular</span>
-            <h3 class="text-xl font-extrabold text-slate-800 mt-0.5">¿En qué se transforma el aceite recolectado?</h3>
+            <span class="text-xs font-bold uppercase tracking-wider text-emerald-600">Valorización del Residuo</span>
+            <h3 class="text-xl font-extrabold text-slate-800 mt-0.5">Rutas de Aprovechamiento del Aceite Vegetal Usado</h3>
           </div>
 
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -379,8 +382,8 @@
                 <span class="text-2xl">⛽</span>
                 <span class="text-[11px] font-bold bg-emerald-100 text-emerald-800 px-2.5 py-0.5 rounded-full">Rendimiento: 88%</span>
               </div>
-              <h4 class="font-bold text-slate-800 text-sm">Biodiésel</h4>
-              <p class="text-xs text-slate-600 mt-1 leading-relaxed">Biocombustible renovable que reduce hasta un 80% las emisiones contaminantes frente al diésel fósil.</p>
+              <h4 class="font-bold text-slate-800 text-sm">Biodiésel (Transesterificación)</h4>
+              <p class="text-xs text-slate-600 mt-1 leading-relaxed">Biocombustible renovable que reduce hasta un 80% las emisiones netas de CO₂ frente al diésel fósil.</p>
             </div>
 
             <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200/70">
@@ -389,7 +392,7 @@
                 <span class="text-[11px] font-bold bg-sky-100 text-sky-800 px-2.5 py-0.5 rounded-full">Saponificación</span>
               </div>
               <h4 class="font-bold text-slate-800 text-sm">Jabones Biodegradables</h4>
-              <p class="text-xs text-slate-600 mt-1 leading-relaxed">Elaboración de jabones en barra y desengrasantes ecológicos para cocinas y comercios locales.</p>
+              <p class="text-xs text-slate-600 mt-1 leading-relaxed">Reacción alcalina controlada para fabricar detergentes ecológicos en barra y desengrasantes libres de fosfatos.</p>
             </div>
 
             <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200/70">
@@ -397,8 +400,8 @@
                 <span class="text-2xl">🧴</span>
                 <span class="text-[11px] font-bold bg-purple-100 text-purple-800 px-2.5 py-0.5 rounded-full">Subproducto</span>
               </div>
-              <h4 class="font-bold text-slate-800 text-sm">Glicerina Vegetal</h4>
-              <p class="text-xs text-slate-600 mt-1 leading-relaxed">Base purificada aprovechada en la industria cosmética, farmacéutica y cremas humectantes.</p>
+              <h4 class="font-bold text-slate-800 text-sm">Glicerina Vegetal Purificada</h4>
+              <p class="text-xs text-slate-600 mt-1 leading-relaxed">Subproducto de la síntesis de biodiésel aprovechado por la industria cosmética y farmacéutica.</p>
             </div>
 
             <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200/70">
@@ -407,7 +410,7 @@
                 <span class="text-[11px] font-bold bg-amber-100 text-amber-800 px-2.5 py-0.5 rounded-full">Artesanal / Industrial</span>
               </div>
               <h4 class="font-bold text-slate-800 text-sm">Velas y Bio-lubricantes</h4>
-              <p class="text-xs text-slate-600 mt-1 leading-relaxed">Ceras ecológicas de combustión limpia y lubricantes biodegradables para maquinaria.</p>
+              <p class="text-xs text-slate-600 mt-1 leading-relaxed">Solidificación con ceras naturales para combustión limpia y desmoldantes industriales no tóxicos.</p>
             </div>
           </div>
         </div>
@@ -415,9 +418,9 @@
         <!-- Calculadora Interactiva -->
         <div class="lg:col-span-5 bg-gradient-to-b from-slate-900 to-slate-800 text-white p-6 sm:p-7 rounded-3xl shadow-lg border border-slate-700 flex flex-col justify-between space-y-5">
           <div class="space-y-2">
-            <span class="text-xs font-bold uppercase tracking-wider text-emerald-400">Simulador Ambiental</span>
-            <h3 class="text-xl font-extrabold">Calcula la huella anual de tu cocina</h3>
-            <p class="text-xs text-slate-300">Desliza para estimar el impacto anual según los litros usados por semana:</p>
+            <span class="text-xs font-bold uppercase tracking-wider text-emerald-400">Simulador de Huella Hídrica</span>
+            <h3 class="text-xl font-extrabold">Calcula el impacto anual de tu cocina</h3>
+            <p class="text-xs text-slate-300">Ajusta el volumen semanal de aceite vegetal usado para estimar el beneficio ambiental:</p>
           </div>
 
           <div class="space-y-4 bg-slate-800/90 p-4 rounded-2xl border border-slate-700">
@@ -452,18 +455,60 @@
 
           <button onclick="cambiarVista('restaurante')"
             class="w-full bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-extrabold py-3 rounded-xl text-xs sm:text-sm transition shadow">
-            Agendar Recolección de mi Negocio →
+            Agendar Recolección de estos Litros →
           </button>
+        </div>
+      </div>
+
+      <!-- Directorio de Puntos Fijos de Acopio para Hogares -->
+      <div class="bg-white p-6 sm:p-7 rounded-3xl shadow-sm border border-slate-200/90">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-5">
+          <div>
+            <span class="text-xs font-bold uppercase tracking-wider text-emerald-600">Participación Ciudadana</span>
+            <h3 class="text-lg sm:text-xl font-extrabold text-slate-800">Centros Fijos de Acopio en Ensenada (Hogares &lt; 10 L)</h3>
+          </div>
+          <span class="text-xs bg-emerald-50 text-emerald-800 border border-emerald-200 px-3 py-1.5 rounded-xl font-medium">
+            💡 Deposita el aceite frío y colado en botellas PET bien cerradas
+          </span>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs">
+          <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200/80 flex items-start gap-3">
+            <span class="text-xl bg-emerald-100 text-emerald-700 p-2.5 rounded-xl">📍</span>
+            <div>
+              <h4 class="font-bold text-slate-800 text-sm">Módulo Verde Valle Dorado</h4>
+              <p class="text-slate-500 mt-0.5">Blvd. Zertuche y Av. de los Lagos</p>
+              <p class="text-emerald-700 font-semibold mt-1.5">Lun a Vie: 8:00 AM – 4:00 PM</p>
+            </div>
+          </div>
+
+          <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200/80 flex items-start gap-3">
+            <span class="text-xl bg-emerald-100 text-emerald-700 p-2.5 rounded-xl">📍</span>
+            <div>
+              <h4 class="font-bold text-slate-800 text-sm">Centro de Acopio Zona Centro</h4>
+              <p class="text-slate-500 mt-0.5">Calle Cuarta y Alvarado, Zona Centro</p>
+              <p class="text-emerald-700 font-semibold mt-1.5">Lun a Sáb: 9:00 AM – 5:00 PM</p>
+            </div>
+          </div>
+
+          <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200/80 flex items-start gap-3">
+            <span class="text-xl bg-emerald-100 text-emerald-700 p-2.5 rounded-xl">📍</span>
+            <div>
+              <h4 class="font-bold text-slate-800 text-sm">Punto Universitario El Sauzal</h4>
+              <p class="text-slate-500 mt-0.5">Corredor Costero Tijuana-Ensenada, El Sauzal</p>
+              <p class="text-emerald-700 font-semibold mt-1.5">Lun a Vie: 8:30 AM – 3:30 PM</p>
+            </div>
+          </div>
         </div>
       </div>
     </section>
 
     <!-- =================================================================== -->
-    <!-- VISTA 2: MI NEGOCIO / GENERADOR (CON PERFIL GUARDADO)               -->
+    <!-- VISTA 2: GENERADOR / COMERCIO (CON PERFIL GUARDADO)                 -->
     <!-- =================================================================== -->
     <section id="vista-restaurante" class="hidden fade-in space-y-6">
 
-      <!-- Tarjeta de Perfil Guardado del Negocio -->
+      <!-- Tarjeta de Perfil Guardado del Generador -->
       <div class="bg-gradient-to-r from-emerald-900 to-teal-900 text-white p-5 sm:p-6 rounded-3xl shadow-md flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div class="flex items-center gap-3.5">
           <div class="w-12 h-12 rounded-2xl bg-white/10 border border-white/20 flex items-center justify-center text-2xl shrink-0">
@@ -472,13 +517,13 @@
           <div>
             <span class="text-[11px] font-bold uppercase tracking-wider text-emerald-300">Perfil de Generador Activo</span>
             <h3 id="banner-nombre-negocio" class="text-lg sm:text-xl font-extrabold">Sin perfil guardado (Modo Libre)</h3>
-            <p id="banner-detalle-negocio" class="text-xs text-emerald-100/80">Configura tu negocio para autocompletar tus datos y filtrar tus entregas.</p>
+            <p id="banner-detalle-negocio" class="text-xs text-emerald-100/80">Configura tu establecimiento o domicilio para autocompletar tus datos y filtrar tus entregas.</p>
           </div>
         </div>
         <div class="flex items-center gap-2 shrink-0">
           <button onclick="abrirModalConFormularioNegocio()"
             class="bg-emerald-400 hover:bg-emerald-300 text-slate-950 font-extrabold px-4 py-2.5 rounded-xl text-xs transition shadow">
-            ✏️ Editar / Guardar Mi Negocio
+            ✏️ Editar / Guardar Perfil
           </button>
         </div>
       </div>
@@ -493,7 +538,7 @@
               </div>
               <div>
                 <h2 class="text-base font-extrabold text-slate-800">Nueva Solicitud de Recolección</h2>
-                <p class="text-xs text-slate-500">Se sincroniza al instante en el mapa</p>
+                <p class="text-xs text-slate-500">Se sincroniza al instante en el mapa de Ensenada</p>
               </div>
             </div>
           </div>
@@ -566,7 +611,7 @@
 
             <label class="flex items-center gap-2 text-xs text-slate-600 cursor-pointer pt-1">
               <input type="checkbox" id="check-guardar-perfil" checked class="accent-emerald-600 rounded">
-              <span>Recordar estos datos como mi negocio predeterminado</span>
+              <span>Recordar estos datos como mi perfil predeterminado</span>
             </label>
 
             <button type="submit"
@@ -698,11 +743,11 @@
 
   </main>
 
-  <!-- Pie de Página -->
+  <!-- Pie de Página Académico -->
   <footer class="bg-white border-t border-slate-200/80 py-5 px-4 mt-12">
-    <div class="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-2 text-xs text-slate-500">
-      <p><strong>EcoAceite Ensenada</strong> · Prototipo de Desarrollo Sustentable &amp; Economía Circular</p>
-      <p>Ingeniería en Sistemas Computacionales · Ensenada, Baja California</p>
+    <div class="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-2 text-xs text-slate-500 text-center sm:text-left">
+      <p><strong>Estrategia Digital de Economía Circular para la Prevención de Contaminación Hídrica por Aceite Vegetal en Ensenada</strong></p>
+      <p class="shrink-0">Desarrollo Sustentable · Ingeniería en Sistemas Computacionales · Ensenada, B.C.</p>
     </div>
   </footer>
 
@@ -714,7 +759,7 @@
     import { getDatabase, ref, push, onValue, update, set, remove } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
 
     // =====================================================================
-    // 1. CREDENCIALES DE FIREBASE (INTEGRADAS)
+    // 1. CREDENCIALES DE FIREBASE (CONECTADO A TU BASE EN LA NUBE)
     // =====================================================================
     const firebaseConfig = {
       apiKey: "AIzaSyB1eMGlKe2mvmAMmEJ6rORphrDlQ2bD1ys",
@@ -768,7 +813,7 @@
       }
     ];
 
-    // Ejemplos marcados con esDemo: true para nunca confundirlos con registros reales
+    // Ejemplos marcados con esDemo: true para nunca mezclarlos con registros reales
     const DATOS_DEMO_INICIALES = [
       {
         keyDemo: "demo_bahia",
@@ -839,11 +884,11 @@
     let mapaEspectador = null;
     let capaMarcadoresEspectador = null;
     let filtroBitacoraPropias = "todas";
-    let perfilNegocio = JSON.parse(localStorage.getItem("ecoaceite_perfil_negocio") || "null");
-    let rolActual = localStorage.getItem("ecoaceite_rol_activo") || "espectador";
+    let perfilNegocio = JSON.parse(localStorage.getItem("edec_avu_perfil_negocio") || "null");
+    let rolActual = localStorage.getItem("edec_avu_rol_activo") || "espectador";
 
     // =====================================================================
-    // 2. GESTIÓN DE PERFIL DE USUARIO Y ROLES (ESPECTADOR / NEGOCIO / RECOLECTOR)
+    // 2. GESTIÓN DE PERFIL DE USUARIO Y ROLES
     // =====================================================================
     function actualizarUIconPerfil() {
       const badgeRol = document.getElementById("badge-rol-activo");
@@ -851,7 +896,7 @@
       const bannerDetalle = document.getElementById("banner-detalle-negocio");
 
       if (rolActual === "negocio" && perfilNegocio) {
-        badgeRol.textContent = `🏪 Negocio: ${perfilNegocio.nombre}`;
+        badgeRol.textContent = `🏪 Generador: ${perfilNegocio.nombre}`;
       } else if (rolActual === "recolector") {
         badgeRol.textContent = `🚚 Modo Recolector Activo`;
       } else {
@@ -862,14 +907,13 @@
         bannerNombre.textContent = `${perfilNegocio.nombre} (${perfilNegocio.giro})`;
         bannerDetalle.textContent = `📍 Zona: ${perfilNegocio.zona} ${perfilNegocio.notas ? "· " + perfilNegocio.notas : ""}`;
 
-        // Autocompletar el formulario de recolección con los datos guardados del negocio
         document.getElementById("input-negocio").value = perfilNegocio.nombre;
         document.getElementById("input-giro").value = perfilNegocio.giro;
         document.getElementById("input-zona").value = perfilNegocio.zona;
         document.getElementById("input-notas").value = perfilNegocio.notas || "";
       } else {
         bannerNombre.textContent = "Sin perfil guardado (Modo Libre)";
-        bannerDetalle.textContent = "Guarda los datos de tu restaurante o casa para pedir recolecciones en 1 clic.";
+        bannerDetalle.textContent = "Guarda los datos de tu restaurante o domicilio para solicitar recolecciones en 1 clic.";
       }
     }
 
@@ -905,13 +949,13 @@
 
     function seleccionarModo(modo) {
       rolActual = modo;
-      localStorage.setItem("ecoaceite_rol_activo", modo);
+      localStorage.setItem("edec_avu_rol_activo", modo);
       actualizarUIconPerfil();
       cerrarModalRol();
 
       if (modo === "espectador") {
         cambiarVista("impacto");
-        mostrarToast("Modo Espectador", "Explorando mapa e impacto ambiental en vivo.", "👀");
+        mostrarToast("Modo Espectador", "Explorando mapa e impacto hídrico en vivo.", "👀");
       } else if (modo === "recolector") {
         cambiarVista("recolector");
         mostrarToast("Modo Recolector", "Hoja de ruta activa lista para confirmar entregas.", "🚚");
@@ -929,14 +973,14 @@
 
       perfilNegocio = { nombre, giro, zona, notas };
       rolActual = "negocio";
-      localStorage.setItem("ecoaceite_perfil_negocio", JSON.stringify(perfilNegocio));
-      localStorage.setItem("ecoaceite_rol_activo", "negocio");
+      localStorage.setItem("edec_avu_perfil_negocio", JSON.stringify(perfilNegocio));
+      localStorage.setItem("edec_avu_rol_activo", "negocio");
 
       actualizarUIconPerfil();
       cerrarModalRol();
       cambiarVista("restaurante");
       renderizarTodo();
-      mostrarToast("¡Negocio Guardado!", `Bienvenido, ${nombre}. Tus datos ya están listos.`, "🏪");
+      mostrarToast("¡Perfil Guardado!", `Bienvenido, ${nombre}. Tus datos ya están listos.`, "🏪");
     });
 
     function cambiarFiltroPropias(tipo) {
@@ -993,7 +1037,6 @@
         ? document.getElementById("filtro-zona-mapa").value
         : "todas";
 
-      // 1. Pines Verdes: Centros de Acopio Fijos
       const iconoFijo = L.divIcon({
         className: "custom-pin",
         html: `<div style="background:#059669;color:white;width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;border:3px solid white;box-shadow:0 3px 8px rgba(0,0,0,0.25);">♻️</div>`,
@@ -1014,7 +1057,6 @@
         capa.addLayer(marker);
       });
 
-      // 2. Pines Ámbar: Solicitudes Pendientes
       const iconoPendiente = L.divIcon({
         className: "custom-pin",
         html: `<div style="background:#f59e0b;color:#0f172a;width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:17px;border:3px solid white;box-shadow:0 4px 12px rgba(245,158,11,0.55);font-weight:bold;">🛢️</div>`,
@@ -1097,14 +1139,13 @@
         }
       }
 
-      // Respaldo Local
-      const guardados = localStorage.getItem("ecoaceite_ensenada_v2");
+      const guardados = localStorage.getItem("edec_avu_datos_v1");
       solicitudes = guardados ? JSON.parse(guardados) : [...DATOS_DEMO_INICIALES];
       renderizarTodo();
     }
 
     function guardarEnLocal() {
-      localStorage.setItem("ecoaceite_ensenada_v2", JSON.stringify(solicitudes));
+      localStorage.setItem("edec_avu_datos_v1", JSON.stringify(solicitudes));
     }
 
     // =====================================================================
@@ -1123,12 +1164,11 @@
 
       if (!negocio || litros <= 0) return;
 
-      // Si dejó marcada la casilla, guardamos su negocio para próximas visitas
       if (recordarPerfil) {
         perfilNegocio = { nombre: negocio, giro, zona, notas };
         rolActual = "negocio";
-        localStorage.setItem("ecoaceite_perfil_negocio", JSON.stringify(perfilNegocio));
-        localStorage.setItem("ecoaceite_rol_activo", "negocio");
+        localStorage.setItem("edec_avu_perfil_negocio", JSON.stringify(perfilNegocio));
+        localStorage.setItem("edec_avu_rol_activo", "negocio");
         actualizarUIconPerfil();
       }
 
@@ -1164,7 +1204,6 @@
         renderizarTodo();
       }
 
-      // Solo limpiamos los litros para que su perfil siga listo
       document.getElementById("input-litros").value = "";
       actualizarPreviewImpacto();
       mostrarToast(
@@ -1202,7 +1241,6 @@
       );
     }
 
-    // AGREGA DEMOS SIN BORRAR TUS REGISTROS REALES
     function agregarDatosDemoSeguros() {
       if (usarFirebase && db) {
         DATOS_DEMO_INICIALES.forEach((item) => {
@@ -1228,7 +1266,6 @@
       );
     }
 
-    // LIMPIA ÚNICAMENTE LOS DEMOS Y DEJA TUS NEGOCIOS REALES
     function limpiarSoloDemos() {
       if (usarFirebase && db) {
         solicitudes.forEach((s) => {
@@ -1272,7 +1309,7 @@
       document.getElementById("porcentaje-meta").textContent = `${porcentaje}%`;
       document.getElementById("barra-meta").style.width = `${porcentaje}%`;
       document.getElementById("stat-co2").textContent = `${totalCO2Evitado.toLocaleString("es-MX")} kg CO₂`;
-      document.getElementById("stat-pendientes-hero").textContent = `${pendientes.length} comercios`;
+      document.getElementById("stat-pendientes-hero").textContent = `${pendientes.length} establecimientos`;
 
       document.getElementById("badge-pendientes").textContent = pendientes.length;
       document.getElementById("recolector-paradas").textContent = `${pendientes.length} puntos`;
@@ -1446,13 +1483,13 @@
         document.getElementById(`vista-${v}`).classList.add("hidden");
         const btn = document.getElementById(`btn-${v}`);
         btn.className =
-          "nav-btn flex-1 md:flex-initial px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all text-emerald-200 hover:text-white flex items-center justify-center gap-2";
+          "nav-btn flex-1 lg:flex-initial px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all text-emerald-200 hover:text-white flex items-center justify-center gap-2";
       });
 
       document.getElementById(`vista-${vista}`).classList.remove("hidden");
       const btnActivo = document.getElementById(`btn-${vista}`);
       btnActivo.className =
-        "nav-btn flex-1 md:flex-initial px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all bg-emerald-500 text-slate-950 shadow-md flex items-center justify-center gap-2";
+        "nav-btn flex-1 lg:flex-initial px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all bg-emerald-500 text-slate-950 shadow-md flex items-center justify-center gap-2";
 
       if (vista === "impacto") {
         inicializarMapaEspectador();
@@ -1534,8 +1571,7 @@
     actualizarCalculadora();
     inicializarMapaEspectador();
 
-    // Si es la primera vez que entra el usuario, mostrar el selector de rol
-    if (!localStorage.getItem("ecoaceite_rol_activo")) {
+    if (!localStorage.getItem("edec_avu_rol_activo")) {
       abrirModalRol();
     }
   </script>
